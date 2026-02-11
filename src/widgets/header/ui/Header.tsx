@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {
-  EllipsisVertical,
-  Languages,
-  LogIn,
-  LogOut,
-  Monitor,
-  Moon,
-  Sun,
-} from "lucide-react";
+import { EllipsisVertical, Languages, LogIn, LogOut } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -31,7 +23,6 @@ import { cn } from "@/utils";
 
 import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
-import { ButtonGroup } from "@/shared/ui/button-group";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 import {
@@ -42,7 +33,7 @@ import {
 
 import { ROUTES, TOOLTIP_DELAY } from "@/shared/config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
-import { ThemeSwitcherMenuItem } from "@/features/theme-switcher";
+import { ThemeSwitcherMenuItem, useTheme } from "@/features/theme-switcher";
 
 interface HeaderProps {
   className?: string;
@@ -51,7 +42,8 @@ interface HeaderProps {
 // TODO SSR
 
 export function Header(props: HeaderProps) {
-  const [theme, setTheme] = useState<"light" | "dark" | "system">("dark");
+  const {} = useTheme();
+
   const [language, setLanguage] = useState<SupportedLanguageCode>("en");
 
   const handleChangeLanguage = (code: string) => {

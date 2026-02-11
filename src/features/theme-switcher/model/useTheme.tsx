@@ -1,13 +1,47 @@
-import { useState } from "react";
+import "client-only";
 
-import { isTheme, Theme } from "./config";
+import { useLayoutEffect } from "react";
+
+import { useLocalStorage } from "@/lib/hooks";
+
+import { DEFAULT_THEME, THEME_STORAGE_KEY, Theme } from "./config";
+import { getSystemTheme } from "./getSystemTheme";
 
 export const useTheme = () => {
-  const _theme = localStorage.getItem("theme");
-
-  const [theme, setTheme] = useState<Theme>(
-    isTheme(_theme) ? _theme : "system",
+  const [theme, setTheme] = useLocalStorage<Theme>(
+    THEME_STORAGE_KEY,
+    DEFAULT_THEME,
   );
 
-  return { theme, setTheme };
+  // Применение темы к DOM
+  useLayoutEffect(() => {
+    const root = window.document.documentElement;
+
+    const applyTheme = () => {
+      const targetTheme = theme === "system" ? getSystemTheme() : theme;
+
+      // Оптимизация: применяем только если нужно изменить
+      if (!root.classList.contains(targetTheme)) {
+        root.classList.remove("light", "dark");
+        root.classList.add(targetTheme);
+      }
+    };
+
+    applyTheme();
+
+    // Отслеживание изменений системной темы
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = () => applyTheme();
+
+      mediaQuery.addEventListener("change", handleChange);
+
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+  }, [theme]);
+
+  return {
+    theme,
+    setTheme,
+  };
 };
