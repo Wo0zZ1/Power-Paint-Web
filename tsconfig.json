@@ -26,7 +26,8 @@
       "@/shared/*": ["./src/shared/*"],
       "@/processes/*": ["./src/processes/*"],
       "@/lib/*": ["./src/shared/lib/*"],
-      "@/utils": ["./src/shared/lib/utils"]
+      "@/utils": ["./src/shared/lib/utils"],
+      "@/config": ["./src/shared/config"]
     }
   },
   "include": [

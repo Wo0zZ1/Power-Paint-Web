@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 
+import { LayoutProvider } from "@/app/providers";
+
 import { Header } from "@/widgets/header";
 
-import { geistMono, geistSans } from "./fonts";
+import { geistMono, geistSans, interSans } from "./fonts";
 
 import "./globals.css";
 
@@ -20,12 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
-      >
-        <Header />
-        {children}
+    <html
+      className={`${geistSans.variable} ${geistMono.variable} ${interSans.variable} dark antialiased`}
+      lang="en"
+    >
+      <body>
+        <LayoutProvider>
+          <Header />
+          {children}
+        </LayoutProvider>
       </body>
     </html>
   );
