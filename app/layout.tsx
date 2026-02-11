@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { LayoutProvider } from "@/app/providers";
 
 import { Header } from "@/widgets/header";
+import { ThemeScript } from "@/features/theme-switcher/ui/ThemeScript";
 
 import { geistMono, geistSans, interSans } from "./fonts";
 
@@ -23,9 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`${geistSans.variable} ${geistMono.variable} ${interSans.variable} dark antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${interSans.variable} antialiased`}
       lang="en"
+      suppressHydrationWarning
     >
+      <head>
+        <ThemeScript />
+      </head>
       <body>
         <LayoutProvider>
           <Header />
