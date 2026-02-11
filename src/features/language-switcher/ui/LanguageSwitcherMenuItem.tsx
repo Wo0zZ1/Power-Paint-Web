@@ -12,11 +12,7 @@ import { LanguageList } from "./LanguageList";
 import { LanguageTrigger } from "./LanguageTrigger";
 import { changeLocaleAction } from "../actions/changeLocaleAction";
 
-interface LanguageSwitcherMenuItemProps {
-  className?: string;
-}
-
-export function LanguageSwitcherMenuItem(props: LanguageSwitcherMenuItemProps) {
+export function LanguageSwitcherMenuItem() {
   const locale = useLocale();
 
   return (

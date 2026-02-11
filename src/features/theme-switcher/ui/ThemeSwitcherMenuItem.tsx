@@ -1,14 +1,19 @@
+"use client";
+
 import { cn } from "@/utils";
 
 import { DropdownMenuItem } from "@/shared/ui";
 
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { useTranslations } from "next-intl";
 
 interface ThemeSwitcherMenuItemProps {
   className?: string;
 }
 
 export function ThemeSwitcherMenuItem(props: ThemeSwitcherMenuItemProps) {
+  const t = useTranslations("settings");
+
   return (
     <DropdownMenuItem
       onSelect={(e) => e.preventDefault()}
@@ -17,7 +22,7 @@ export function ThemeSwitcherMenuItem(props: ThemeSwitcherMenuItemProps) {
         props.className,
       )}
     >
-      <label className="mr-2">Theme</label>
+      <label className="mr-2">{t("theme")}</label>
       <ThemeSwitcher />
     </DropdownMenuItem>
   );

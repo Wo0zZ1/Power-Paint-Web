@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
@@ -79,6 +80,14 @@ function DropdownMenuItem({
       )}
       {...props}
     />
+  );
+}
+
+function DropdownMenuLinkItem({ ...props }: React.ComponentProps<typeof Link>) {
+  return (
+    <DropdownMenuItem>
+      <Link {...props} />
+    </DropdownMenuItem>
   );
 }
 
@@ -246,6 +255,7 @@ export {
   DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuItem,
+  DropdownMenuLinkItem,
   DropdownMenuCheckboxItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,

@@ -12,6 +12,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuLinkItem,
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 
@@ -101,16 +102,16 @@ export function Header(props: HeaderProps) {
               <DropdownMenuGroup>
                 <DropdownMenuLabel>{t("account")}</DropdownMenuLabel>
 
-                <DropdownMenuItem>
-                  <Link href={ROUTES.PROFILE}>{t("profile")}</Link>
-                </DropdownMenuItem>
+                <DropdownMenuLinkItem href={ROUTES.PROFILE}>
+                  {t("profile")}
+                </DropdownMenuLinkItem>
 
-                <DropdownMenuItem>
-                  <Link href={ROUTES.SETTINGS}>{t("settings.title")}</Link>
-                </DropdownMenuItem>
-
-                <Separator className="my-1" />
+                <DropdownMenuLinkItem href={ROUTES.SETTINGS}>
+                  {t("settings.title")}
+                </DropdownMenuLinkItem>
               </DropdownMenuGroup>
+
+              <Separator className="my-1" />
 
               <DropdownMenuGroup>
                 <DropdownMenuLabel>{t("settings.title")}</DropdownMenuLabel>
