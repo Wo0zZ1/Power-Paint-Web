@@ -42,6 +42,7 @@ import {
 
 import { ROUTES, TOOLTIP_DELAY } from "@/shared/config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
+import { ThemeSwitcherMenuItem } from "@/features/theme-switcher";
 
 interface HeaderProps {
   className?: string;
@@ -127,41 +128,7 @@ export function Header(props: HeaderProps) {
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
 
-                <DropdownMenuItem
-                  asChild
-                  onSelect={(e) => e.preventDefault()}
-                  className="hover:bg-transparent focus:bg-transparent cursor-default"
-                >
-                  <div className="flex gap-4">
-                    <label>Theme</label>
-                    <ButtonGroup>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={theme === "light"}
-                        onClick={() => setTheme("light")}
-                      >
-                        <Sun />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={theme === "dark"}
-                        onClick={() => setTheme("dark")}
-                      >
-                        <Moon />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={theme === "system"}
-                        onClick={() => setTheme("system")}
-                      >
-                        <Monitor />
-                      </Button>
-                    </ButtonGroup>
-                  </div>
-                </DropdownMenuItem>
+                <ThemeSwitcherMenuItem />
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -231,41 +198,7 @@ export function Header(props: HeaderProps) {
                   </DropdownMenuPortal>
                 </DropdownMenuSub>
 
-                <DropdownMenuItem
-                  asChild
-                  onSelect={(e) => e.preventDefault()}
-                  className="hover:bg-transparent focus:bg-transparent cursor-default"
-                >
-                  <div className="flex gap-4">
-                    <label>Theme</label>
-                    <ButtonGroup>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={theme === "light"}
-                        onClick={() => setTheme("light")}
-                      >
-                        <Sun />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={theme === "dark"}
-                        onClick={() => setTheme("dark")}
-                      >
-                        <Moon />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={theme === "system"}
-                        onClick={() => setTheme("system")}
-                      >
-                        <Monitor />
-                      </Button>
-                    </ButtonGroup>
-                  </div>
-                </DropdownMenuItem>
+                <ThemeSwitcherMenuItem />
               </DropdownMenuGroup>
 
               <Separator className="my-1" />
