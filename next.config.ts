@@ -4,6 +4,9 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig: NextConfig = {
   reactCompiler: true,
   typedRoutes: true,
+  images: {
+    remotePatterns: [new URL("https://avatars.githubusercontent.com")],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin({

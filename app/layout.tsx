@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale } from "next-intl/server";
+import { SessionProvider } from "next-auth/react";
 
 import { ClientProviders, ServerProviders } from "@/app/providers";
 

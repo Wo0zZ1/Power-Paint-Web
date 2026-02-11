@@ -7,6 +7,11 @@ import { EllipsisVertical, LogIn, LogOut } from "lucide-react";
 import { cn } from "@/utils";
 
 import {
+  Separator,
+  Button,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -14,16 +19,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuLinkItem,
   DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu";
+} from "@/shared/ui";
 
-import { Button } from "@/shared/ui/button";
-import { Separator } from "@/shared/ui/separator";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { ROUTES, TOOLTIP_DELAY } from "@/shared/config";
-import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 
 import { ThemeSwitcherMenuItem, useTheme } from "@/features/theme-switcher";
 import { LanguageSwitcherMenuItem } from "@/features/language-switcher";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { ButtonAvatar } from "./ButtonAvatar";
 
 interface HeaderProps {
   className?: string;
@@ -33,6 +36,10 @@ interface HeaderProps {
 
 export function Header(props: HeaderProps) {
   const {} = useTheme();
+
+  const { data: session, status, update } = useSession();
+
+  console.log(session);
 
   const t = useTranslations();
 
@@ -50,96 +57,102 @@ export function Header(props: HeaderProps) {
         </Link>
 
         <div className="flex items-center gap-6">
-          {/* Settings button */}
-          <DropdownMenu>
-            <Tooltip delayDuration={TOOLTIP_DELAY} disableHoverableContent>
-              <TooltipTrigger asChild>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    className="rounded-full"
-                    size="icon-lg"
-                    variant="outline"
-                  >
-                    <EllipsisVertical />
-                  </Button>
-                </DropdownMenuTrigger>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{t("settings.title")}</p>
-              </TooltipContent>
-            </Tooltip>
+          {/* Profile */}
+          {status === "loading" && <ButtonAvatar nickname="User" loading />}
 
-            <DropdownMenuContent align="end">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>{t("settings.title")}</DropdownMenuLabel>
+          {status === "authenticated" && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <ButtonAvatar
+                  nickname={session?.user?.name ?? "User"}
+                  src="/assets/avatar.png"
+                />
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>
+                    {session?.user?.name ?? "User"}
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
 
                 <Separator className="my-1" />
 
-                <LanguageSwitcherMenuItem />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>{t("account")}</DropdownMenuLabel>
 
-                <ThemeSwitcherMenuItem />
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <DropdownMenuLinkItem href={ROUTES.PROFILE}>
+                    {t("profile")}
+                  </DropdownMenuLinkItem>
 
-          {/* Profile Button */}
-          {/* There is a session */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer" size="lg">
-                <AvatarImage src="/avatar.png" alt="User Avatar" />
-                <AvatarFallback>W</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
+                  <DropdownMenuLinkItem href={ROUTES.SETTINGS}>
+                    {t("settings.title")}
+                  </DropdownMenuLinkItem>
+                </DropdownMenuGroup>
 
-            <DropdownMenuContent align="end">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>{"Wo0zZ1"}</DropdownMenuLabel>
-              </DropdownMenuGroup>
+                <Separator className="my-1" />
 
-              <Separator className="my-1" />
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>{t("settings.title")}</DropdownMenuLabel>
 
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>{t("account")}</DropdownMenuLabel>
+                  <LanguageSwitcherMenuItem />
 
-                <DropdownMenuLinkItem href={ROUTES.PROFILE}>
-                  {t("profile")}
-                </DropdownMenuLinkItem>
+                  <ThemeSwitcherMenuItem />
+                </DropdownMenuGroup>
 
-                <DropdownMenuLinkItem href={ROUTES.SETTINGS}>
-                  {t("settings.title")}
-                </DropdownMenuLinkItem>
-              </DropdownMenuGroup>
+                <Separator className="my-1" />
 
-              <Separator className="my-1" />
+                <DropdownMenuItem
+                  onSelect={() => signOut({ callbackUrl: ROUTES.ROOT })}
+                  variant="destructive"
+                >
+                  <LogOut />
+                  {t("auth.logout")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>{t("settings.title")}</DropdownMenuLabel>
+          {status === "unauthenticated" && (
+            <>
+              <DropdownMenu>
+                <Tooltip delayDuration={TOOLTIP_DELAY} disableHoverableContent>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        className="rounded-full"
+                        size="icon-lg"
+                        variant="outline"
+                      >
+                        <EllipsisVertical />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t("settings.title")}</p>
+                  </TooltipContent>
+                </Tooltip>
 
-                <LanguageSwitcherMenuItem />
+                <DropdownMenuContent align="end">
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>{t("settings.title")}</DropdownMenuLabel>
 
-                <ThemeSwitcherMenuItem />
-              </DropdownMenuGroup>
+                    <Separator className="my-1" />
 
-              <Separator className="my-1" />
+                    <LanguageSwitcherMenuItem />
 
-              <DropdownMenuItem
-                onSelect={() => console.log("LogOut")}
-                variant="destructive"
-              >
-                <LogOut />
-                {t("auth.logout")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* There is no session */}
-          <Button className="group" size="lg" variant="secondary" asChild>
-            <Link href={ROUTES.LOGIN}>
-              {t("auth.login")}
-              <LogIn className="relative left-0 group-hover:left-1 transition-all" />
-            </Link>
-          </Button>
+                    <ThemeSwitcherMenuItem />
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button className="group" size="lg" variant="secondary" asChild>
+                <Button onClick={() => signIn()}>
+                  {t("auth.login")}
+                  <LogIn className="relative left-0 group-hover:left-1 transition-all" />
+                </Button>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
