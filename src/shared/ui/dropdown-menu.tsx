@@ -85,7 +85,7 @@ function DropdownMenuItem({
 
 function DropdownMenuLinkItem({ ...props }: React.ComponentProps<typeof Link>) {
   return (
-    <DropdownMenuItem>
+    <DropdownMenuItem asChild>
       <Link {...props} />
     </DropdownMenuItem>
   );

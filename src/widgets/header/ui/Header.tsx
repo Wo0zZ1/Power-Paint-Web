@@ -35,11 +35,9 @@ interface HeaderProps {
 // TODO SSR
 
 export function Header(props: HeaderProps) {
-  const {} = useTheme();
+  const {} = useTheme(); // TODO Нужно для корректной работы переключения темы при SSR, иначе возникает рассинхронизация между сервером и клиентом
 
-  const { data: session, status, update } = useSession();
-
-  console.log(session);
+  const { data: session, status } = useSession();
 
   const t = useTranslations();
 
