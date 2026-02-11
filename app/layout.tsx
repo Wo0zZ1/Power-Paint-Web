@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { getLocale, getMessages } from "next-intl/server";
 
-import { LayoutProvider } from "@/app/providers";
+import { ClientProviders, ServerProviders } from "@/app/providers";
 
 import { Header } from "@/widgets/header";
+
 import { ThemeScript } from "@/features/theme-switcher/ui/ThemeScript";
 
 import { geistMono, geistSans, interSans } from "./fonts";
@@ -17,25 +19,29 @@ export const metadata: Metadata = {
   description: "A simple paint application built with React and TypeScript.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
     <html
       className={`${geistSans.variable} ${geistMono.variable} ${interSans.variable} antialiased`}
-      lang="en"
+      lang={locale}
       suppressHydrationWarning
     >
       <head>
         <ThemeScript />
       </head>
       <body>
-        <LayoutProvider>
-          <Header />
-          {children}
-        </LayoutProvider>
+        <ServerProviders>
+          <ClientProviders>
+            <Header />
+            {children}
+          </ClientProviders>
+        </ServerProviders>
       </body>
     </html>
   );

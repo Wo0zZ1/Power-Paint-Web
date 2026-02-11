@@ -1,0 +1,14 @@
+{
+  "auth": {
+    "login": "Log In",
+    "logout": "Log Out",
+    "signup": "Sign Up"
+  },
+  "account": "Account",
+  "profile": "Profile",
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language"
+  }
+}

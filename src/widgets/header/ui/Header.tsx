@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { EllipsisVertical, Languages, LogIn, LogOut } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { EllipsisVertical, LogIn, LogOut } from "lucide-react";
+
+import { cn } from "@/utils";
 
 import {
   DropdownMenu,
@@ -10,30 +12,17 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
-
-import { cn } from "@/utils";
 
 import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-
-import {
-  isLanguageSupported,
-  SUPPORTED_LANGUAGES,
-  SupportedLanguageCode,
-} from "@/shared/i18n";
-
 import { ROUTES, TOOLTIP_DELAY } from "@/shared/config";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
+
 import { ThemeSwitcherMenuItem, useTheme } from "@/features/theme-switcher";
+import { LanguageSwitcherMenuItem } from "@/features/language-switcher";
 
 interface HeaderProps {
   className?: string;
@@ -44,11 +33,7 @@ interface HeaderProps {
 export function Header(props: HeaderProps) {
   const {} = useTheme();
 
-  const [language, setLanguage] = useState<SupportedLanguageCode>("en");
-
-  const handleChangeLanguage = (code: string) => {
-    if (isLanguageSupported(code)) setLanguage(code);
-  };
+  const t = useTranslations();
 
   return (
     <header
@@ -79,46 +64,17 @@ export function Header(props: HeaderProps) {
                 </DropdownMenuTrigger>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Settings</p>
+                <p>{t("settings.title")}</p>
               </TooltipContent>
             </Tooltip>
 
             <DropdownMenuContent align="end">
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("settings.title")}</DropdownMenuLabel>
 
                 <Separator className="my-1" />
 
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="ml-auto">
-                    <Languages />
-                    Language
-                  </DropdownMenuSubTrigger>
-
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent asChild className="w-40">
-                      <DropdownMenuRadioGroup
-                        value={language}
-                        onValueChange={handleChangeLanguage}
-                      >
-                        {SUPPORTED_LANGUAGES.map((lang) => (
-                          <DropdownMenuRadioItem
-                            key={lang.code}
-                            value={lang.code}
-                          >
-                            {lang.nativeName}
-                          </DropdownMenuRadioItem>
-                        ))}
-                        <DropdownMenuRadioItem value={"de"} disabled>
-                          Deutsch
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value={"fr"} disabled>
-                          Français
-                        </DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
+                <LanguageSwitcherMenuItem />
 
                 <ThemeSwitcherMenuItem />
               </DropdownMenuGroup>
@@ -143,52 +99,23 @@ export function Header(props: HeaderProps) {
               <Separator className="my-1" />
 
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Account</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("account")}</DropdownMenuLabel>
 
                 <DropdownMenuItem>
-                  <Link href={ROUTES.PROFILE}>Profile</Link>
+                  <Link href={ROUTES.PROFILE}>{t("profile")}</Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem>
-                  <Link href={ROUTES.SETTINGS}>Settings</Link>
+                  <Link href={ROUTES.SETTINGS}>{t("settings.title")}</Link>
                 </DropdownMenuItem>
 
                 <Separator className="my-1" />
               </DropdownMenuGroup>
 
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("settings.title")}</DropdownMenuLabel>
 
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="ml-auto">
-                    <Languages />
-                    Language
-                  </DropdownMenuSubTrigger>
-
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent asChild className="w-40">
-                      <DropdownMenuRadioGroup
-                        value={language}
-                        onValueChange={handleChangeLanguage}
-                      >
-                        {SUPPORTED_LANGUAGES.map((lang) => (
-                          <DropdownMenuRadioItem
-                            key={lang.code}
-                            value={lang.code}
-                          >
-                            {lang.nativeName}
-                          </DropdownMenuRadioItem>
-                        ))}
-                        <DropdownMenuRadioItem value={"de"} disabled>
-                          Deutsch
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value={"fr"} disabled>
-                          Français
-                        </DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
+                <LanguageSwitcherMenuItem />
 
                 <ThemeSwitcherMenuItem />
               </DropdownMenuGroup>
@@ -200,7 +127,7 @@ export function Header(props: HeaderProps) {
                 variant="destructive"
               >
                 <LogOut />
-                Sign Out
+                {t("auth.logout")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -208,7 +135,7 @@ export function Header(props: HeaderProps) {
           {/* There is no session */}
           <Button className="group" size="lg" variant="secondary" asChild>
             <Link href={ROUTES.LOGIN}>
-              Login
+              {t("auth.login")}
               <LogIn className="relative left-0 group-hover:left-1 transition-all" />
             </Link>
           </Button>

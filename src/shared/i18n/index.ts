@@ -1,9 +1,9 @@
 export {
-  LANGUAGES,
-  SUPPORTED_LANGUAGES,
-  DEFAULT_LANGUAGE,
-  getLanguage,
-  isLanguageSupported,
+  LOCALES,
+  DEFAULT_LOCALE,
+  ALL_LOCALES,
+  isLocaleSupported,
+  getLocale,
 } from "./config";
 
-export type { SupportedLanguageCode, ISupportedLanguage } from "./config";
+export type { SupportedLocaleCode, ISupportedLocale } from "./config";

@@ -1,16 +1,20 @@
-export const LANGUAGES = {
-  en: { code: "en", name: "English", nativeName: "English" },
-  ru: { code: "ru", name: "Russian", nativeName: "Русский" },
+export const LOCALES = {
+  en: { code: "en", name: "English", nativeName: "English", enabled: true },
+  ru: { code: "ru", name: "Russian", nativeName: "Русский", enabled: true },
+  de: { code: "de", name: "German", nativeName: "Deutsch", enabled: false },
+  fr: { code: "fr", name: "French", nativeName: "Français", enabled: false },
 } as const;
 
-export type SupportedLanguageCode = keyof typeof LANGUAGES;
-export type ISupportedLanguage = (typeof LANGUAGES)[SupportedLanguageCode];
+export type SupportedLocaleCode = keyof typeof LOCALES;
+export type ISupportedLocale = (typeof LOCALES)[SupportedLocaleCode];
 
-export const SUPPORTED_LANGUAGES = Object.values(LANGUAGES);
-export const DEFAULT_LANGUAGE: SupportedLanguageCode = "en";
+export const ALL_LOCALES = Object.values(LOCALES);
+export const DEFAULT_LOCALE: SupportedLocaleCode = "en";
 
-export const getLanguage = (code: SupportedLanguageCode) => LANGUAGES[code];
+export const getLocale = (code: SupportedLocaleCode) => LOCALES[code];
 
-export const isLanguageSupported = (code: string): code is SupportedLanguageCode => {
-  return code in LANGUAGES;
+export const isLocaleSupported = (
+  code: string,
+): code is SupportedLocaleCode => {
+  return code in LOCALES;
 };
