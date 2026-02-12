@@ -1,0 +1,16 @@
+import Link from "next/link";
+
+import { cn } from "@/utils";
+import { ROUTES } from "@/shared/config";
+
+interface LogoProps {
+  className?: string;
+}
+
+export async function Logo(props: LogoProps) {
+  return (
+    <Link className={cn(props.className)} href={ROUTES.ROOT}>
+      <h1 className="text-3xl">PowerPaint</h1>
+    </Link>
+  );
+}

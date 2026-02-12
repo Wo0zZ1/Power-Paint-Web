@@ -5,15 +5,20 @@ import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/shared/ui";
 interface ButtonAvatarProps {
   className?: string;
   src?: string;
-  nickname: string;
+  fallback?: string;
   loading?: boolean;
 }
 
-export function ButtonAvatar(props: ButtonAvatarProps) {
-  if (props.loading) {
+export function ButtonAvatar({
+  className,
+  src,
+  fallback,
+  loading,
+}: ButtonAvatarProps) {
+  if (loading) {
     return (
       <Avatar
-        className={cn("cursor-pointer animate-pulse", props.className)}
+        className={cn("cursor-pointer animate-pulse", className)}
         size="lg"
         asChild
       >
@@ -23,12 +28,10 @@ export function ButtonAvatar(props: ButtonAvatarProps) {
   }
 
   return (
-    <>
-      <Avatar className={cn("cursor-pointer", props.className)} size="lg">
-        {props.src && <AvatarImage src={props.src} alt={props.nickname} />}
-        <AvatarFallback>{props.nickname[0]}</AvatarFallback>
-        <AvatarBadge style={{ overflow: "" }} className="bg-green-500 z-10" />
-      </Avatar>
-    </>
+    <Avatar className={cn("cursor-pointer", className)} size="lg">
+      {src && <AvatarImage src={src} alt={fallback} />}
+      {fallback && <AvatarFallback>{fallback[0]}</AvatarFallback>}
+      <AvatarBadge className="bg-green-500" />
+    </Avatar>
   );
 }
