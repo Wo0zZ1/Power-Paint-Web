@@ -1,43 +1,170 @@
-import type { NextAuthOptions } from "next-auth";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import type { DefaultSession, NextAuthOptions } from "next-auth";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
+import { prisma } from "../lib/prisma";
+import { AccessLevel, Role, WorkspaceType } from "@prisma/client";
+
 export const AUTH_CONFIG = {
+  adapter: PrismaAdapter(prisma),
+
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+
+      profile(profile) {
+        console.log("Google Profile from provider:", profile);
+        const emailVerified = profile.email_verified ? new Date() : null;
+
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          emailVerified,
+          image: profile.picture,
+          role: Role.User,
+        };
+      },
+      allowDangerousEmailAccountLinking: true,
     }),
     Github({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+
+      profile(profile) {
+        console.log("Github Profile from provider:", profile);
+        const emailVerified = new Date();
+
+        return {
+          id: String(profile.id),
+          name: profile.name || profile.login,
+          email: profile.email,
+          emailVerified,
+          image: profile.avatar_url,
+          role: Role.User,
+        };
+      },
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
+
   session: {
-    strategy: "jwt", // TODO Switch to DB strategy
+    strategy: "database",
     maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
-  callbacks: {
-    session({ session, token }) {
-      const newSession = structuredClone(session) as typeof session & {
-        user: { id: string };
-      };
 
-      if (newSession?.user && token?.sub) newSession.user.id = token.sub;
-
-      return newSession;
+  cookies: {
+    sessionToken: {
+      name: "sessionId",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
     },
-    // authorized({ auth, request: { nextUrl } }) {
-    //   const isLoggedIn = !!auth?.user;
-    //   const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-    //   if (isOnDashboard) {
-    //     if (isLoggedIn) return true;
-    //     return false; // Redirect unauthenticated users to login page
-    //   } else if (isLoggedIn) {
-    //     return Response.redirect(new URL("/dashboard", nextUrl));
-    //   }
-    //   return true;
-    // },
   },
+
+  callbacks: {
+    async session({ session, user }) {
+      console.log("=== session callback ===");
+      console.log("user from DB:", user);
+
+      session.user.id = user.id;
+      session.user.email = user.email;
+      session.user.emailVerified = user.emailVerified;
+      session.user.name = user.name;
+      session.user.image = user.image ?? null;
+      session.user.role = user.role;
+
+      return session;
+    },
+
+    async signIn({ user, account, profile }) {
+      console.log("=== signIn callback ===");
+      console.log("user:", user);
+      console.log("account:", account);
+      console.log("profile:", profile);
+
+      // Check email verification except for Credentials provider
+      if (account?.provider !== "Credentials" && !user.emailVerified) {
+        console.error("Email not verified");
+        return false;
+      }
+
+      return true;
+    },
+  },
+
+  events: {
+    async createUser({ user }) {
+      console.log("=== createUser event ===");
+      console.log("New user created:", user);
+      console.log("emailVerified in DB:", user.emailVerified);
+
+      try {
+        await prisma.workspace.create({
+          data: {
+            name: `${user.name}'s Workspace`,
+            type: WorkspaceType.personal,
+            accessLevel: AccessLevel.private,
+            ownerId: user.id,
+          },
+        });
+      } catch (error) {
+        console.error("Failed to create workspace:", error);
+      }
+    },
+
+    async linkAccount({ user, account, profile }) {
+      console.log("=== linkAccount event ===");
+      console.log("Account linked for user:", user.id);
+      console.log("user.emailVerified:", user.emailVerified);
+      console.log("account.provider:", account.provider);
+      console.log("profile.emailVerified:", profile.emailVerified);
+
+      // Update emailVerified if we trust the provier's email verification
+      if (!user.emailVerified && profile.emailVerified) {
+        try {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { emailVerified: new Date() },
+          });
+        } catch (error) {
+          console.error("Failed to update emailVerified:", error);
+        }
+      }
+    },
+  },
+
   secret: process.env.NEXTAUTH_SECRET,
 } satisfies NextAuthOptions;
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      emailVerified: Date | null;
+      image: string | null;
+      role: Role;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: Date | null;
+    image: string | null;
+    role: Role;
+  }
+
+  interface Profile {
+    email_verified?: Date | boolean;
+  }
+}
