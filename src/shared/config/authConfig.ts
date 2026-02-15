@@ -16,7 +16,6 @@ export const AUTH_CONFIG = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
 
       profile(profile) {
-        console.log("Google Profile from provider:", profile);
         const emailVerified = profile.email_verified ? new Date() : null;
 
         return {
@@ -35,7 +34,6 @@ export const AUTH_CONFIG = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
 
       profile(profile) {
-        console.log("Github Profile from provider:", profile);
         const emailVerified = new Date();
 
         return {
@@ -71,9 +69,6 @@ export const AUTH_CONFIG = {
 
   callbacks: {
     async session({ session, user }) {
-      console.log("=== session callback ===");
-      console.log("user from DB:", user);
-
       session.user.id = user.id;
       session.user.email = user.email;
       session.user.emailVerified = user.emailVerified;
@@ -84,12 +79,7 @@ export const AUTH_CONFIG = {
       return session;
     },
 
-    async signIn({ user, account, profile }) {
-      console.log("=== signIn callback ===");
-      console.log("user:", user);
-      console.log("account:", account);
-      console.log("profile:", profile);
-
+    async signIn({ user, account }) {
       // Check email verification except for Credentials provider
       if (account?.provider !== "Credentials" && !user.emailVerified) {
         console.error("Email not verified");
@@ -102,10 +92,6 @@ export const AUTH_CONFIG = {
 
   events: {
     async createUser({ user }) {
-      console.log("=== createUser event ===");
-      console.log("New user created:", user);
-      console.log("emailVerified in DB:", user.emailVerified);
-
       try {
         await prisma.workspace.create({
           data: {
@@ -120,13 +106,7 @@ export const AUTH_CONFIG = {
       }
     },
 
-    async linkAccount({ user, account, profile }) {
-      console.log("=== linkAccount event ===");
-      console.log("Account linked for user:", user.id);
-      console.log("user.emailVerified:", user.emailVerified);
-      console.log("account.provider:", account.provider);
-      console.log("profile.emailVerified:", profile.emailVerified);
-
+    async linkAccount({ user, profile }) {
       // Update emailVerified if we trust the provier's email verification
       if (!user.emailVerified && profile.emailVerified) {
         try {
