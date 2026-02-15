@@ -4,7 +4,7 @@ import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/shared/ui";
 
 interface ButtonAvatarProps {
   className?: string;
-  src?: string;
+  src?: string | null;
   fallback?: string;
   loading?: boolean;
 }
@@ -30,7 +30,7 @@ export function ButtonAvatar({
   return (
     <Avatar className={cn("cursor-pointer", className)} size="lg">
       {src && <AvatarImage src={src} alt={fallback} />}
-      {fallback && <AvatarFallback>{fallback[0]}</AvatarFallback>}
+      {fallback && <AvatarFallback>{fallback.slice(0, 2)}</AvatarFallback>}
       <AvatarBadge className="bg-green-500" />
     </Avatar>
   );

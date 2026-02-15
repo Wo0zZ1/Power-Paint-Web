@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
-import { SessionProvider } from "next-auth/react";
 
 import { ClientProviders, ServerProviders } from "@/app/providers";
 
@@ -11,6 +10,7 @@ import { ThemeScript } from "@/features/theme-switcher/ui/ThemeScript";
 import { geistMono, geistSans, interSans } from "./fonts";
 
 import "./globals.css";
+import { getSession } from "@/shared/lib/auth";
 
 export const metadata: Metadata = {
   title: {
@@ -26,6 +26,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
+  const session = await getSession();
 
   return (
     <html
@@ -38,7 +39,7 @@ export default async function RootLayout({
       </head>
       <body>
         <ServerProviders>
-          <ClientProviders>
+          <ClientProviders session={session}>
             <Header />
             {children}
           </ClientProviders>

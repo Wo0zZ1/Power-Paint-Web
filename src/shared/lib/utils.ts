@@ -8,3 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function shortenEmail(email: string, maxLocalLength = 6): string {
+  const [localPart, domain] = email.split("@");
+  if (localPart.length <= maxLocalLength) return email;
+
+  const shortenedLocal = `${localPart.slice(0, maxLocalLength)}..${localPart.slice(-1)}`;
+  return `${shortenedLocal}@${domain}`;
+}

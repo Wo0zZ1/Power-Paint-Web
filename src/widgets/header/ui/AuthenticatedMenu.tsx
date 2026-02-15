@@ -21,6 +21,7 @@ import { LanguageSwitcherMenuItem } from "@/features/language-switcher";
 import { ThemeSwitcherMenuItem } from "@/features/theme-switcher";
 
 import { ButtonAvatar } from "./ButtonAvatar";
+import { shortenEmail } from "@/shared/lib/utils";
 
 interface AuthenticatedMenuProps {
   session: Session;
@@ -32,16 +33,13 @@ export function AuthenticatedMenu({ session }: AuthenticatedMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <ButtonAvatar
-          fallback={session?.user?.email?.toUpperCase() ?? "User"}
-          src="/assets/avatar.png"
-        />
+        <ButtonAvatar fallback={session.user.email} src={session.user.image} />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
           <DropdownMenuLabel>
-            {session?.user?.email ?? "User"}
+            {shortenEmail(session.user.email, 8)}
           </DropdownMenuLabel>
         </DropdownMenuGroup>
 
