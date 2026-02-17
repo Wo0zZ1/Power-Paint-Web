@@ -92,6 +92,13 @@ export const AUTH_CONFIG = {
 
   events: {
     async createUser({ user }) {
+      const userWorkspace = await prisma.workspace.findFirst({
+        where: {
+          ownerId: user.id,
+          type: WorkspaceType.personal,
+        },
+      });
+      if (userWorkspace) return;
       try {
         await prisma.workspace.create({
           data: {
