@@ -6,6 +6,7 @@ import { LogIn } from "lucide-react";
 
 import { cn } from "@/utils";
 import { Button } from "@/shared/ui";
+import { ROUTES } from "@/shared/config";
 
 interface LoginButtonProps {
   className?: string;
@@ -19,7 +20,9 @@ export function LoginButton({ className }: LoginButtonProps) {
       size="lg"
       className={cn("group", className)}
       variant="secondary"
-      onClick={() => signIn()}
+      onClick={() =>
+        signIn(undefined, { redirect: true, callbackUrl: ROUTES.DASHBOARD })
+      }
     >
       {t("login")}
       <LogIn className="relative left-0 group-hover:left-1 transition-all" />

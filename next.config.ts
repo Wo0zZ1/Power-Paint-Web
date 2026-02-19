@@ -3,12 +3,19 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  typedRoutes: true,
+  typedRoutes: false,
   images: {
     remotePatterns: [
-      new URL("https://avatars.githubusercontent.com"),
-      new URL("https://lh3.googleusercontent.com"),
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
     ],
+    qualities: [25, 50, 75, 100],
   },
 };
 

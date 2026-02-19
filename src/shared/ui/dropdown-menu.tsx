@@ -83,10 +83,14 @@ function DropdownMenuItem({
   );
 }
 
-function DropdownMenuLinkItem({ ...props }: React.ComponentProps<typeof Link>) {
+function DropdownMenuLinkItem({
+  href,
+  disabled,
+  ...props
+}: React.ComponentProps<typeof Link> & { disabled?: boolean }) {
   return (
-    <DropdownMenuItem asChild>
-      <Link {...props} />
+    <DropdownMenuItem disabled={disabled} asChild>
+      <Link href={href} {...props} />
     </DropdownMenuItem>
   );
 }

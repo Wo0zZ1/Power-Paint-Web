@@ -48,11 +48,11 @@ export function AuthenticatedMenu({ session }: AuthenticatedMenuProps) {
         <DropdownMenuGroup>
           <DropdownMenuLabel>{t("account")}</DropdownMenuLabel>
 
-          <DropdownMenuLinkItem href={ROUTES.PROFILE}>
+          <DropdownMenuLinkItem href={ROUTES.PROFILE(session.user.id)}>
             {t("profile")}
           </DropdownMenuLinkItem>
 
-          <DropdownMenuLinkItem href={ROUTES.SETTINGS}>
+          <DropdownMenuLinkItem disabled href={ROUTES.SETTINGS}>
             {t("settings.title")}
           </DropdownMenuLinkItem>
         </DropdownMenuGroup>

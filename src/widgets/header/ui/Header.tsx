@@ -4,7 +4,7 @@ import { cn } from "@/utils";
 
 import { Logo } from "./logo";
 import { HeaderActions } from "./HeaderActions";
-import { ButtonAvatar } from "./ButtonAvatar";
+import { LoadingAvatar } from "./LoadingAvatar";
 
 interface HeaderProps {
   className?: string;
@@ -21,7 +21,7 @@ export async function Header(props: HeaderProps) {
       <div className="flex container mx-auto h-full px-4 items-center justify-between">
         <Logo />
 
-        <Suspense fallback={<ButtonAvatar loading />}>
+        <Suspense fallback={<LoadingAvatar />}>
           <HeaderActions />
         </Suspense>
       </div>

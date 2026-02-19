@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Avatar as AvatarPrimitive } from "radix-ui";
+import Image from "next/image";
 
 import { cn } from "@/utils";
 
@@ -27,12 +28,44 @@ function Avatar({
 
 function AvatarImage({
   className,
+  alt,
+  src,
   ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+}: React.ComponentProps<typeof Image> & {
+  alt: string;
+  src: string;
+}) {
+  const [status, setStatus] = React.useState<
+    "idle" | "loading" | "loaded" | "error"
+  >("loading");
+
+  React.useEffect(() => {
+    setStatus("loading");
+  }, [src]);
+
+  const handleLoad = () => {
+    setStatus("loaded");
+  };
+
+  const handleError = () => {
+    setStatus("error");
+  };
+
+  if (status === "error") return null;
+
   return (
-    <AvatarPrimitive.Image
+    <Image
       data-slot="avatar-image"
-      className={cn("aspect-square size-full rounded-full", className)}
+      data-state={status}
+      className={cn(
+        "absolute inset-0 aspect-square size-full rounded-full object-cover transition-opacity",
+        { "opacity-0": status !== "loaded" },
+        className,
+      )}
+      src={src}
+      alt={alt}
+      onLoad={handleLoad}
+      onError={handleError}
       {...props}
     />
   );
