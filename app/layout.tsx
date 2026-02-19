@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
 
-import { ClientProviders, ServerProviders } from "@/app/providers";
+import {
+  ClientProviders,
+  QueryProvider,
+  ServerProviders,
+} from "@/app/providers";
 
 import { Header } from "@/widgets/header";
 
@@ -39,10 +43,12 @@ export default async function RootLayout({
       </head>
       <body>
         <ServerProviders>
-          <ClientProviders session={session}>
-            <Header />
-            {children}
-          </ClientProviders>
+          <QueryProvider>
+            <ClientProviders session={session}>
+              <Header />
+              {children}
+            </ClientProviders>
+          </QueryProvider>
         </ServerProviders>
       </body>
     </html>
