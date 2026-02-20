@@ -13,6 +13,9 @@ export const GET = async (request: NextRequest) => {
     include: {
       boards: true,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
 
   const session = await getSession();

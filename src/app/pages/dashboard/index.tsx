@@ -4,11 +4,10 @@ import { redirect } from "next/navigation";
 import { Board, Workspace, WorkspaceType } from "@prisma/client";
 
 import { cn } from "@/utils";
-
 import { ROUTES } from "@/shared/config";
 import { Access, getSession } from "@/shared/lib/auth";
+
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -19,7 +18,7 @@ import {
   CarouselPrevious,
 } from "@/shared/ui";
 
-import { WorkspaceCard } from "@/entities/workspace";
+import { WorkspacesCarouselBlock } from "@/widgets/workspaces-carousel";
 
 export async function DashboardPage() {
   const session = await getSession();
@@ -52,40 +51,14 @@ export async function DashboardPage() {
     (boardData) => boardData.board.workspaceId === personalWorkspace.id,
   );
 
-  console.log(boardsData);
-  console.log(workspacesFetchData);
+  // console.log(boardsData);
+  // console.log(workspacesFetchData);
 
   if (!session) redirect(ROUTES.LOGIN);
 
   return (
     <div className={cn("w-full")}>
-      {/* Workspaces */}
-      <div className="flex justify-between items-end mt-8 mb-4">
-        <h3 className="text-2xl font-semibold ">Workspaces</h3>
-        <Button size="xs" variant="link" className="text-sm" asChild>
-          <Link href={"/dashboard/workspaces"}>View all</Link>
-        </Button>
-      </div>
-      <Carousel opts={{ dragFree: true }}>
-        <CarouselContent>
-          {workspacesData.map(({ workspace, access }, index: number) => (
-            <CarouselItem
-              key={workspace.id}
-              className="basis-1/1 xs:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
-            >
-              <WorkspaceCard workspace={workspace} access={access} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious
-          variant={"secondary"}
-          className="bg-secondary/75 left-6 size-10"
-        />
-        <CarouselNext
-          variant={"secondary"}
-          className="bg-secondary/75 right-6 size-10"
-        />
-      </Carousel>
+      <WorkspacesCarouselBlock />
 
       {/* Boards */}
       <h3 className="text-2xl font-semibold mt-8 mb-4">Boards</h3>
@@ -94,7 +67,7 @@ export async function DashboardPage() {
           <CarouselContent className="">
             {filteredBoardsFetchData.map(({ board, access }, index) => (
               <CarouselItem key={board.id} className="basis-1/3">
-                <Link href={`/boards/${board.id}`}>
+                <Link href={ROUTES.BOARD(board.id)}>
                   <Card className="aspect-video">
                     <CardHeader className="border-b">
                       <h4 className="text-lg font-medium">{board.name}</h4>

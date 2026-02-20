@@ -10,7 +10,7 @@ import {
 
 import { LanguageList } from "./LanguageList";
 import { LanguageTrigger } from "./LanguageTrigger";
-import { changeLocaleAction } from "../actions/changeLocaleAction";
+import { changeLocaleAction } from "../models/changeLocaleAction";
 
 export function LanguageSwitcherMenuItem() {
   const locale = useLocale();

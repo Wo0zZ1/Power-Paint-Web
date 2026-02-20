@@ -21,7 +21,10 @@ export function LoginButton({ className }: LoginButtonProps) {
       className={cn("group", className)}
       variant="secondary"
       onClick={() =>
-        signIn(undefined, { redirect: true, callbackUrl: ROUTES.DASHBOARD })
+        signIn(undefined, {
+          redirect: true,
+          callbackUrl: ROUTES.DASHBOARD.ROOT,
+        })
       }
     >
       {t("login")}

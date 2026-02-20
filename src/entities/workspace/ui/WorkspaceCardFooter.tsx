@@ -1,0 +1,28 @@
+import Link from "next/link";
+
+import { cn } from "@/utils";
+import { ROUTES } from "@/shared/config";
+
+import { Button, CardFooter } from "@/shared/ui";
+
+interface WorkspaceCardFooterProps {
+  className?: string;
+  workspaceId: string;
+}
+
+export function WorkspaceCardFooter({
+  className,
+  workspaceId,
+}: WorkspaceCardFooterProps) {
+  return (
+    <CardFooter className={cn(className, "")}>
+      <Button
+        asChild
+        variant="secondary"
+        className="w-full text-xs md:text-base"
+      >
+        <Link href={ROUTES.WORKSPACE(workspaceId)}>View</Link>
+      </Button>
+    </CardFooter>
+  );
+}
