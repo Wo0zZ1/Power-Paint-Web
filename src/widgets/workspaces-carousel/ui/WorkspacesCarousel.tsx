@@ -61,22 +61,26 @@ export function WorkspacesCarousel({ className }: WorkspacesCarouselProps) {
   return (
     <>
       <Carousel opts={{ dragFree: true }} className={cn("", className)}>
-        <CarouselContent>
-          {data?.map(({ workspace, access }) => (
-            <CarouselItem
-              key={workspace.id}
-              className="basis-1/1 xs:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
-            >
-              <WorkspaceCard
-                workspace={workspace}
-                access={access}
-                onEditWorkspaceName={handleChangeWorkspaceName}
-                onEditWorkspaceAccess={handleChangeWorkspaceAccess}
-                onDeleteWorkspace={handleWorkspaceDelete}
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+        {data && data.length > 0 ? (
+          <CarouselContent>
+            {data.map(({ workspace, accessRole }) => (
+              <CarouselItem
+                key={workspace.id}
+                className="basis-1/1 xs:basis-1/2 md:basis-1/3 lg:basis-1/3 xl:basis-1/4"
+              >
+                <WorkspaceCard
+                  workspace={workspace}
+                  accessRole={accessRole}
+                  onEditWorkspaceName={handleChangeWorkspaceName}
+                  onEditWorkspaceAccess={handleChangeWorkspaceAccess}
+                  onDeleteWorkspace={handleWorkspaceDelete}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        ) : (
+          <div className="text-muted-foreground">No workspaces available</div> // TODO add empty state design
+        )}
 
         <CarouselPrevious
           variant="secondary"

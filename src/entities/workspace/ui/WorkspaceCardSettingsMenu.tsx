@@ -2,7 +2,7 @@
 
 import { Settings } from "lucide-react";
 
-import { Access } from "@/shared/lib/auth";
+import { AccessRole } from "@/shared/constants";
 
 import {
   DropdownMenuContent,
@@ -16,14 +16,14 @@ import {
 import { WorkspaceCardMenuActions } from "./WorkspaceCardMenuActions";
 
 interface WorkspaceCardSettingsMenuProps {
-  access: Access;
+  accessRole: AccessRole;
   onEditWorkspaceName?: () => void;
   onEditWorkspaceAccess?: () => void;
   onDeleteWorkspace?: () => void;
 }
 
 export function WorkspaceCardSettingsMenu({
-  access,
+  accessRole,
   onEditWorkspaceName,
   onEditWorkspaceAccess,
   onDeleteWorkspace,
@@ -46,7 +46,7 @@ export function WorkspaceCardSettingsMenu({
         <Separator className="my-1" />
 
         <WorkspaceCardMenuActions
-          access={access}
+          accessRole={accessRole}
           onEditWorkspaceName={onEditWorkspaceName}
           onEditWorkspaceAccess={onEditWorkspaceAccess}
           onDeleteWorkspace={onDeleteWorkspace}
