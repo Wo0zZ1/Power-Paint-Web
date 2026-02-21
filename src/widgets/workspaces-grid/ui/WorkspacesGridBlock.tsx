@@ -1,18 +1,17 @@
-import Link from "next/link";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import Link from "next/link";
 
-import { ROUTES } from "@/shared/config";
 import { getQueryClient } from "@/shared/api";
-
+import { ROUTES } from "@/shared/config";
 import { Button } from "@/shared/ui";
 
 import { getWorkspacesQueryOption } from "@/entities/workspace/server";
 
-import { WorkspacesCarousel } from "./WorkspacesCarousel";
-import { getTranslations } from "next-intl/server";
+import { WorkspacesGrid } from "./WorkspacesGrid";
 
-export async function WorkspacesCarouselBlock() {
+export async function WorkspacesGridBlock() {
   const t = await getTranslations();
 
   const queryClient = getQueryClient();
@@ -25,16 +24,14 @@ export async function WorkspacesCarouselBlock() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex justify-between items-end mt-8 mb-4">
-        <h3 className="text-2xl font-semibold">{t("workspace.plural")}</h3>
+        <h3 className="text-2xl font-semibold">{t("workspace.all")}</h3>
 
         <Button size="xs" variant="link" className="text-sm" asChild>
-          <Link href={ROUTES.DASHBOARD.WORKSPACES}>
-            {t("workspace.viewAll")}
-          </Link>
+          <Link href={ROUTES.DASHBOARD.ROOT}>{t("goBack")}</Link>
         </Button>
       </div>
 
-      <WorkspacesCarousel />
+      <WorkspacesGrid />
     </HydrationBoundary>
   );
 }

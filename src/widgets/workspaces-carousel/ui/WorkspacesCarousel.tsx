@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Workspace } from "@prisma/client";
 import { useTranslations } from "next-intl";
 
 import { cn } from "@/utils";
@@ -12,7 +10,6 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  Spinner,
 } from "@/shared/ui";
 
 import { WorkspaceCard, useGetWorkspacesQuery } from "@/entities/workspace";
@@ -20,6 +17,10 @@ import { WorkspaceCard, useGetWorkspacesQuery } from "@/entities/workspace";
 import { RenameWorkspaceModal } from "@/features/rename-workspace";
 import { DeleteWorkspaceModal } from "@/features/delete-workspace";
 import { ChangeWorkspaceAccessModal } from "@/features/change-workspace-access";
+import { LoadingWorkspacesCarousel } from "./LoadingWorkspacesCarousel";
+import { ErrorWorkspacesCarousel } from "./ErrorWorkspacesCarousel";
+
+import { useWorkspacesCarousel } from "../model/useWorkspacesCarousel";
 
 interface WorkspacesCarouselProps {
   className?: string;
@@ -27,50 +28,25 @@ interface WorkspacesCarouselProps {
 
 export function WorkspacesCarousel({ className }: WorkspacesCarouselProps) {
   const t = useTranslations();
+
   const { data, isLoading, isError, error } = useGetWorkspacesQuery();
 
-  // Modal states
-  const [isRenameModalOpen, setIsRenameModalOpen] = useState<boolean>(false);
-  const [
-    isChangeWorkspaceAccessModalOpen,
-    setIsChangeWorkspaceAccessModalOpen,
-  ] = useState<boolean>(false);
-  const [isDeleteWorkspaceModalOpen, setIsDeleteWorkspaceModalOpen] =
-    useState<boolean>(false);
+  const {
+    selectedWorkspace,
+    isRenameModalOpen,
+    setIsRenameModalOpen,
+    handleChangeWorkspaceName,
+    isDeleteModalOpen,
+    setIsDeleteModalOpen,
+    handleDeleteWorkspace,
+    isChangeAccessModalOpen,
+    setIsChangeAccessModalOpen,
+    handleChangeWorkspaceAccess,
+  } = useWorkspacesCarousel();
 
-  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(
-    null,
-  );
+  if (isLoading) return <LoadingWorkspacesCarousel />;
 
-  const handleChangeWorkspaceName = (workspace: Workspace) => {
-    setSelectedWorkspace(workspace);
-    setIsRenameModalOpen(true);
-  };
-
-  const handleChangeWorkspaceAccess = (workspace: Workspace) => {
-    setSelectedWorkspace(workspace);
-    setIsChangeWorkspaceAccessModalOpen(true);
-  };
-
-  const handleWorkspaceDelete = (workspace: Workspace) => {
-    setSelectedWorkspace(workspace);
-    setIsDeleteWorkspaceModalOpen(true);
-  };
-
-  if (isLoading)
-    return (
-      <div className="flex items-center gap-2 text-lg text-muted-foreground">
-        <Spinner className="size-6" />
-        {t("loading")}...
-      </div>
-    );
-
-  if (isError)
-    return (
-      <div className="flex items-center gap-2 text-lg text-destructive">
-        {t("error")}: {error.message}
-      </div>
-    );
+  if (isError) return <ErrorWorkspacesCarousel error={error} />;
 
   return (
     <>
@@ -88,7 +64,7 @@ export function WorkspacesCarousel({ className }: WorkspacesCarouselProps) {
                   buttonText={t("workspace.view")}
                   onEditWorkspaceName={handleChangeWorkspaceName}
                   onEditWorkspaceAccess={handleChangeWorkspaceAccess}
-                  onDeleteWorkspace={handleWorkspaceDelete}
+                  onDeleteWorkspace={handleDeleteWorkspace}
                 />
               </CarouselItem>
             ))}
@@ -116,14 +92,14 @@ export function WorkspacesCarousel({ className }: WorkspacesCarouselProps) {
 
       <ChangeWorkspaceAccessModal
         workspace={selectedWorkspace}
-        open={isChangeWorkspaceAccessModalOpen}
-        onOpenChange={setIsChangeWorkspaceAccessModalOpen}
+        open={isChangeAccessModalOpen}
+        onOpenChange={setIsChangeAccessModalOpen}
       />
 
       <DeleteWorkspaceModal
         workspace={selectedWorkspace}
-        open={isDeleteWorkspaceModalOpen}
-        onOpenChange={setIsDeleteWorkspaceModalOpen}
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
       />
     </>
   );

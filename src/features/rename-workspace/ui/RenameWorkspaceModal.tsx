@@ -25,7 +25,7 @@ import {
 import { useUpdateWorkspaceMutation } from "@/entities/workspace";
 
 interface RenameWorkspaceModalProps {
-  workspace?: Workspace | null;
+  workspace?: Workspace;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   className?: string;

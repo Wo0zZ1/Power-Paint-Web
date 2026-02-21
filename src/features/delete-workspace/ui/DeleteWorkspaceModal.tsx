@@ -30,7 +30,7 @@ import {
 import { useDeleteWorkspaceMutation } from "@/entities/workspace/model/mutations";
 
 interface DeleteWorkspaceModalProps {
-  workspace?: Workspace | null;
+  workspace?: Workspace;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   className?: string;

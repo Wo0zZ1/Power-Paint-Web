@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { cn } from "@/utils";
 import { ROUTES } from "@/shared/config";
 import { getSession } from "@/shared/lib/auth";
 
@@ -12,9 +11,8 @@ export async function DashboardPage() {
   if (!session) redirect(ROUTES.LOGIN);
 
   return (
-    <div className={cn("w-full")}>
+    <div>
       <WorkspacesCarouselBlock />
-
       {/* Boards */}
       {/* <h3 className="text-2xl font-semibold mt-8 mb-4">Boards</h3>
       {boardsData.length ? (

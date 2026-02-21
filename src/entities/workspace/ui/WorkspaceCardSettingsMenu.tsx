@@ -37,7 +37,7 @@ export function WorkspaceCardSettingsMenu({
         <Button
           size="icon-sm"
           variant="secondary"
-          className="absolute z-100 top-4 right-4"
+          className="absolute z-10 top-4 right-4"
         >
           <Settings />
         </Button>

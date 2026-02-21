@@ -22,7 +22,7 @@ import {
 } from "@/shared/ui";
 
 interface ChangeWorkspaceAccessModalProps {
-  workspace?: Workspace | null;
+  workspace?: Workspace;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   className?: string;

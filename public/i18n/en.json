@@ -2,6 +2,7 @@
   "loading": "Loading",
   "cancel": "Cancel",
   "error": "Error",
+  "goBack": "Go Back",
   "auth": {
     "login": "Log In",
     "logout": "Log Out",
@@ -20,6 +21,7 @@
   },
   "workspace": {
     "plural": "Workspaces",
+    "all": "All Workspaces",
     "empty": "No available workspaces",
     "settings": "Workspace Settings",
     "view": "View",
