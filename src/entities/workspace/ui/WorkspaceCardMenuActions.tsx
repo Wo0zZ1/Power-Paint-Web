@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit2Icon, Share2, Trash2 } from "lucide-react";
+import { PencilLine, Share2, Trash2 } from "lucide-react";
 
 import { AccessRole } from "@/shared/constants";
 
@@ -24,7 +24,7 @@ export function WorkspaceCardMenuActions({
       <DropdownMenuGroup>
         {AccessRole[accessRole] >= AccessRole.ADMIN && (
           <DropdownMenuItem onSelect={onEditWorkspaceName}>
-            <Edit2Icon />
+            <PencilLine />
             Edit Name
           </DropdownMenuItem>
         )}

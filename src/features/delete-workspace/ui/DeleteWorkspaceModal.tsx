@@ -18,9 +18,15 @@ import {
   DialogContent,
   DialogDescription,
   Spinner,
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
 } from "@/shared/ui";
 
 import { useDeleteWorkspaceMutation } from "@/entities/workspace/model/mutations";
+import { LucideFolder } from "lucide-react";
 
 interface DeleteWorkspaceModalProps {
   workspace?: Workspace | null;
@@ -64,7 +70,7 @@ export function DeleteWorkspaceModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn("max-w-lg!", className)}>
+      <DialogContent className={cn("max-w-xl!", className)}>
         <form className="flex flex-col gap-4" onSubmit={handleDeleteWorkspace}>
           <DialogHeader>
             <DialogTitle>Delete Workspace</DialogTitle>
@@ -73,14 +79,29 @@ export function DeleteWorkspaceModal({
             </DialogDescription>
           </DialogHeader>
 
-          <FieldGroup>
+          <FieldGroup className="flex-1 gap-4 justify-end">
+            <Empty className="py-1.5">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <LucideFolder />
+                </EmptyMedia>
+                <EmptyTitle className="font-bold text-destructive">
+                  Warning
+                </EmptyTitle>
+                <EmptyDescription>
+                  This action cannot be undone. All data associated with this
+                  workspace will be permanently deleted.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+
             <Field className="gap-2">
               <label
                 className="leading-none font-medium cursor-text"
                 htmlFor="workspace-name"
               >
                 To confirm, type &quot;<strong>{workspace?.name}</strong>&quot;
-                in the field below
+                in the field below:
               </label>
               <Input
                 id="workspace-name"
@@ -104,7 +125,7 @@ export function DeleteWorkspaceModal({
               type="submit"
             >
               {isMutating && <Spinner />}
-              Delete Workspace
+              {isMutating ? "Deleting Workspace" : "Delete Workspace"}
             </Button>
           </DialogFooter>
         </form>
