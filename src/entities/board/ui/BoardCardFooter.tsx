@@ -5,17 +5,17 @@ import { ROUTES } from "@/shared/config";
 
 import { Button, CardFooter } from "@/shared/ui";
 
-interface WorkspaceCardFooterProps {
+interface BoardCardFooterProps {
   className?: string;
-  workspaceId: string;
+  boardId: string;
   buttonText: string;
 }
 
-export function WorkspaceCardFooter({
+export function BoardCardFooter({
   className,
-  workspaceId,
+  boardId,
   buttonText,
-}: WorkspaceCardFooterProps) {
+}: BoardCardFooterProps) {
   return (
     <CardFooter className={cn(className, "")}>
       <Button
@@ -23,9 +23,7 @@ export function WorkspaceCardFooter({
         variant="secondary"
         className="w-full text-xs md:text-base"
       >
-        <Link href={ROUTES.DASHBOARD.WORKSPACES(workspaceId)}>
-          {buttonText}
-        </Link>
+        <Link href={ROUTES.BOARD(boardId)}>{buttonText}</Link>
       </Button>
     </CardFooter>
   );

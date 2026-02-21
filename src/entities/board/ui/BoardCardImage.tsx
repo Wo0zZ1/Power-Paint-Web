@@ -4,23 +4,23 @@ import { cn } from "@/utils";
 import { ROUTES } from "@/shared/config";
 import Link from "next/link";
 
-interface WorkspaceCardImageProps {
+interface BoardCardImageProps {
   className?: string;
-  workspaceId: string;
+  boardId: string;
   imageProps: StaticImageData;
 }
 
-export function WorkspaceCardImage({
+export function BoardCardImage({
   className,
-  workspaceId,
+  boardId,
   imageProps,
-}: WorkspaceCardImageProps) {
+}: BoardCardImageProps) {
   return (
     <div className={cn(className, "")}>
-      <Link href={ROUTES.DASHBOARD.WORKSPACES(workspaceId)}>
+      <Link href={ROUTES.BOARD(boardId)}>
         <Image
           className="relative aspect-video"
-          alt="Workspace preview image"
+          alt="Board preview image"
           quality={25}
           loading="eager"
           src={imageProps}
