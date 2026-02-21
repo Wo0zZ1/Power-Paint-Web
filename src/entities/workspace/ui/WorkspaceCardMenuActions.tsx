@@ -1,6 +1,7 @@
 "use client";
 
 import { PencilLine, Share2, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { AccessRole } from "@/shared/constants";
 
@@ -19,20 +20,22 @@ export function WorkspaceCardMenuActions({
   onEditWorkspaceAccess,
   onDeleteWorkspace,
 }: WorkspaceCardMenuActionsProps) {
+  const t = useTranslations("workspace");
+
   return (
     <>
       <DropdownMenuGroup>
         {AccessRole[accessRole] >= AccessRole.ADMIN && (
           <DropdownMenuItem onSelect={onEditWorkspaceName}>
             <PencilLine />
-            Edit Name
+            {t("rename.action")}
           </DropdownMenuItem>
         )}
 
         {AccessRole[accessRole] >= AccessRole.ADMIN && (
           <DropdownMenuItem onSelect={onEditWorkspaceAccess}>
             <Share2 />
-            Share
+            {t("access.action")}
           </DropdownMenuItem>
         )}
       </DropdownMenuGroup>
@@ -43,7 +46,7 @@ export function WorkspaceCardMenuActions({
 
           <DropdownMenuItem onSelect={onDeleteWorkspace} variant="destructive">
             <Trash2 />
-            Delete
+            {t("delete.action")}
           </DropdownMenuItem>
         </>
       )}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Workspace } from "@prisma/client";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/utils";
 
@@ -11,6 +12,7 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  Spinner,
 } from "@/shared/ui";
 
 import { WorkspaceCard, useGetWorkspacesQuery } from "@/entities/workspace";
@@ -24,6 +26,7 @@ interface WorkspacesCarouselProps {
 }
 
 export function WorkspacesCarousel({ className }: WorkspacesCarouselProps) {
+  const t = useTranslations();
   const { data, isLoading, isError, error } = useGetWorkspacesQuery();
 
   // Modal states
@@ -54,9 +57,20 @@ export function WorkspacesCarousel({ className }: WorkspacesCarouselProps) {
     setIsDeleteWorkspaceModalOpen(true);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex items-center gap-2 text-lg text-muted-foreground">
+        <Spinner className="size-6" />
+        {t("loading")}...
+      </div>
+    );
 
-  if (isError) return <div>{error.message}</div>;
+  if (isError)
+    return (
+      <div className="flex items-center gap-2 text-lg text-destructive">
+        {t("error")}: {error.message}
+      </div>
+    );
 
   return (
     <>
@@ -71,6 +85,7 @@ export function WorkspacesCarousel({ className }: WorkspacesCarouselProps) {
                 <WorkspaceCard
                   workspace={workspace}
                   accessRole={accessRole}
+                  buttonText={t("workspace.view")}
                   onEditWorkspaceName={handleChangeWorkspaceName}
                   onEditWorkspaceAccess={handleChangeWorkspaceAccess}
                   onDeleteWorkspace={handleWorkspaceDelete}
@@ -79,7 +94,7 @@ export function WorkspacesCarousel({ className }: WorkspacesCarouselProps) {
             ))}
           </CarouselContent>
         ) : (
-          <div className="text-muted-foreground">No workspaces available</div> // TODO add empty state design
+          <div className="text-muted-foreground">{t("workspace.empty")}</div> // TODO add empty state design
         )}
 
         <CarouselPrevious

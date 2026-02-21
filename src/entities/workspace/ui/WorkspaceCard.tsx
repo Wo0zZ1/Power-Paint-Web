@@ -16,6 +16,7 @@ import preview1 from "../../../../public/assets/preview1.jpeg"; // TODO Remove t
 interface WorkspaceCardProps {
   workspace: Workspace;
   accessRole: AccessRole;
+  buttonText: string;
   onEditWorkspaceName?: (workspace: Workspace) => void;
   onEditWorkspaceAccess?: (workspace: Workspace) => void;
   onDeleteWorkspace?: (workspace: Workspace) => void;
@@ -25,6 +26,7 @@ interface WorkspaceCardProps {
 export function WorkspaceCard({
   workspace,
   accessRole,
+  buttonText,
   onEditWorkspaceName,
   onEditWorkspaceAccess,
   onDeleteWorkspace,
@@ -49,7 +51,7 @@ export function WorkspaceCard({
 
       <WorkspaceCardHeader name={workspace.name} />
 
-      <WorkspaceCardFooter workspaceId={workspace.id} />
+      <WorkspaceCardFooter buttonText={buttonText} workspaceId={workspace.id} />
     </Card>
   );
 }
