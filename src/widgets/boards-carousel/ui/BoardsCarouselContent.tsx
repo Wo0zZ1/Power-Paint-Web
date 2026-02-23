@@ -1,60 +1,51 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { cn } from "@/utils";
 
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
   CarouselNext,
+  CarouselPrevious,
 } from "@/shared/ui";
 
-import { BoardCard, useGetBoardsQuery } from "@/entities/board";
-import { WorkspaceWithBoards } from "@/entities/workspace";
+import { BoardCard, BoardWithAccess } from "@/entities/board";
 
 import { ChangeBoardAccessModal } from "@/features/change-board-access";
 import { DeleteBoardModal } from "@/features/delete-board";
 import { RenameBoardModal } from "@/features/rename-board";
 
 import { useBoardsCarousel } from "../model/useBoardsCarousel";
-import { LoadingBoardsCarousel } from "./LoadingBoardsCarousel";
-import { ErrorBoardsCarousel } from "./ErrorBoardsCarousel";
 
-interface BoardsCarouselProps {
-  workspace: WorkspaceWithBoards;
+interface BoardsCarouselContentProps {
+  boards: BoardWithAccess[];
+  className?: string;
 }
 
-export function BoardsCarousel({ workspace }: BoardsCarouselProps) {
+export function BoardsCarouselContent({
+  boards,
+  className,
+}: BoardsCarouselContentProps) {
   const t = useTranslations();
 
   const {
-    data: boards,
-    isLoading,
-    isError,
-    error,
-  } = useGetBoardsQuery({ workspaceId: workspace.id });
-
-  const {
-    selectedBoard,
-    isRenameModalOpen,
-    setIsRenameModalOpen,
     handleChangeBoardName,
-    isDeleteModalOpen,
-    setIsDeleteModalOpen,
-    handleDeleteBoard,
-    isChangeAccessModalOpen,
-    setIsChangeAccessModalOpen,
     handleChangeBoardAccess,
+    handleDeleteBoard,
+    selectedBoard,
+    setIsRenameModalOpen,
+    setIsChangeAccessModalOpen,
+    setIsDeleteModalOpen,
+    isChangeAccessModalOpen,
+    isDeleteModalOpen,
+    isRenameModalOpen,
   } = useBoardsCarousel();
-
-  if (isLoading) return <LoadingBoardsCarousel />;
-
-  if (isError) return <ErrorBoardsCarousel error={error} />;
 
   return (
     <>
-      <Carousel opts={{ dragFree: true }}>
+      <Carousel opts={{ dragFree: true }} className={cn("", className)}>
         {boards && boards.length > 0 ? (
           <CarouselContent>
             {boards.map(({ board, accessRole }) => (
