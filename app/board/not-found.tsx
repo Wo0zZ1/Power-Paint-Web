@@ -21,9 +21,9 @@ export default async function NotFoundPage() {
           <EmptyMedia size="lg" variant="icon">
             <Folder />
           </EmptyMedia>
-          <EmptyTitle size="lg">{t("workspace.notFound.title")}</EmptyTitle>
+          <EmptyTitle size="lg">{t("board.notFound.title")}</EmptyTitle>
           <EmptyDescription size="lg">
-            {t("workspace.notFound.description")}
+            {t("board.notFound.description")}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent size="lg">
