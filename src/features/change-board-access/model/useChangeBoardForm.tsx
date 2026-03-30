@@ -2,40 +2,34 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-  updateWorkspaceSchema,
-  useUpdateWorkspaceMutation,
-} from "@/entities/workspace";
-import type {
-  UpdateWorkspaceData,
-  WorkspaceWithAccess,
-} from "@/entities/workspace";
+import { updateBoardSchema, useUpdateBoardMutation } from "@/entities/board";
+import type { UpdateBoardData, BoardWithAccess } from "@/entities/board";
 import { useMembersManagement } from "@/shared/lib/hooks";
 import type { PublicUser } from "@/shared/types";
 
-interface UseChangeWorkspaceFormProps {
-  workspace?: WorkspaceWithAccess;
+interface UseChangeBoardFormProps {
+  board?: BoardWithAccess;
   onOpenChange: (open: boolean) => void;
   setSearchQuery: (query: string) => void;
 }
 
-export const useChangeWorkspaceForm = ({
-  workspace,
+export const useChangeBoardForm = ({
+  board,
   onOpenChange,
   setSearchQuery,
-}: UseChangeWorkspaceFormProps) => {
+}: UseChangeBoardFormProps) => {
   const { control, formState, setValue, handleSubmit } = useForm({
     values: {
-      accessLevel: workspace?.workspace?.accessLevel,
-      members: workspace?.workspace?.members?.map((m) => ({
+      accessLevel: board?.board?.accessLevel,
+      members: board?.board?.members?.map((m) => ({
         userId: m.user.id,
         role: m.role,
       })),
     },
-    resolver: zodResolver(updateWorkspaceSchema),
+    resolver: zodResolver(updateBoardSchema),
   });
 
-  const updateWorkspaceMutation = useUpdateWorkspaceMutation();
+  const updateBoardMutation = useUpdateBoardMutation();
 
   const {
     // State
@@ -49,7 +43,7 @@ export const useChangeWorkspaceForm = ({
     updateMemberRole,
     removeMember,
   } = useMembersManagement({
-    initialMembers: workspace?.workspace.members.map((m) => ({
+    initialMembers: board?.board.members.map((m) => ({
       user: m.user,
       role: m.role,
     })),
@@ -75,25 +69,25 @@ export const useChangeWorkspaceForm = ({
     [setSearchQuery, addMember],
   );
 
-  const handleChangeWorkspaceAccess = useCallback(
-    async (data: UpdateWorkspaceData) => {
-      if (!workspace) return;
+  const handleChangeBoardAccess = useCallback(
+    async (data: UpdateBoardData) => {
+      if (!board) return;
 
-      await updateWorkspaceMutation.mutateAsync({
-        workspaceId: workspace.workspace.id,
+      await updateBoardMutation.mutateAsync({
+        boardId: board.board.id,
         data,
       });
 
       onOpenChange(false);
     },
-    [updateWorkspaceMutation, workspace, onOpenChange],
+    [updateBoardMutation, board, onOpenChange],
   );
 
   return {
     // form
     control,
     formState,
-    handleSubmit: handleSubmit(handleChangeWorkspaceAccess),
+    handleSubmit: handleSubmit(handleChangeBoardAccess),
     // State
     defaultRole,
     selectedMembers,
