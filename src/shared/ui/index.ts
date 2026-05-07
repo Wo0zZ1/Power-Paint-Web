@@ -28,6 +28,7 @@ export * from "./tabs";
 export * from "./popover";
 export * from "./scroll-area";
 export * from "./item";
+export * from "./skeleton";
 // Custom
 export * from "./ColorInput";
 export * from "./ColorButton";

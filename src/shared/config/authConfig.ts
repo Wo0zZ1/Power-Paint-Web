@@ -147,11 +147,11 @@ export const AUTH_CONFIG = {
     },
 
     async linkAccount({ user, profile }) {
-      const image = profile.image;
+      if (user.image) return;
 
       await prisma.user.update({
         where: { id: user.id },
-        data: { image },
+        data: { image: profile.image },
       });
     },
   },

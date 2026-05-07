@@ -75,7 +75,10 @@
       },
       "image": {
         "label": "Profile Image",
-        "placeholder": "Drag and drop your profile image here"
+        "placeholder": "Drag and drop your profile image here",
+        "uploading": "Uploading...",
+        "empty": "Drag and drop or click to upload",
+        "preview": "Preview"
       },
       "email_code": {
         "label": "Verification Code",

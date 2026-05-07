@@ -86,7 +86,7 @@ export const SignupAction = async (formData: SignupFormData) => {
       });
     });
 
-    return { error: null, ok: true } as const;
+    return { error: null, ok: true, verificationId } as const;
   } catch (error) {
     console.error(error);
     cookieState.delete(VERIFICATION_COOKIE);
