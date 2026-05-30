@@ -55,6 +55,18 @@ interface BoardState {
   tool: Tool;
   setTool: (tool: Tool) => void;
 
+  currentStrokeColor: string;
+  setCurrentStrokeColor: (color: string) => void;
+
+  currentStrokeWidth: number;
+  setCurrentStrokeWidth: (width: number) => void;
+
+  currentFillEnabled: boolean;
+  setCurrentFillEnabled: (enabled: boolean) => void;
+
+  currentFillColor: string;
+  setCurrentFillColor: (color: string) => void;
+
   // ── Модификаторы (зажатые клавиши) ──
   modifiers: { space: boolean; ctrl: boolean; shift: boolean };
   setModifiers: (modifiers: {
@@ -126,6 +138,19 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   setConnectionStatus: (status) => set({ connectionStatus: status }),
 
   tool: "select",
+  setTool: (tool) => set({ tool }),
+
+  currentStrokeColor: "#000000",
+  setCurrentStrokeColor: (color) => set({ currentStrokeColor: color }),
+
+  currentStrokeWidth: 5,
+  setCurrentStrokeWidth: (width) => set({ currentStrokeWidth: width }),
+
+  currentFillEnabled: false,
+  setCurrentFillEnabled: (enabled) => set({ currentFillEnabled: enabled }),
+
+  currentFillColor: "#000000",
+  setCurrentFillColor: (color) => set({ currentFillColor: color }),
 
   modifiers: { space: false, ctrl: false, shift: false },
   setModifiers: (modifiers) =>
@@ -197,8 +222,6 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     }),
 
   clearSelection: () => set({ selectedIds: new Set() }),
-
-  setTool: (tool) => set({ tool }),
 
   updateViewport: (updates) =>
     set((state) => ({ viewport: { ...state.viewport, ...updates } })),

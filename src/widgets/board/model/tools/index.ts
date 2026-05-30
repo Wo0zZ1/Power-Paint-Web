@@ -10,3 +10,4 @@ export * from "./useTextEditing";
 export * from "./useTransformer";
 export * from "./useViewport";
 export * from "./useCopyPast";
+export * from "./useToolMenu";

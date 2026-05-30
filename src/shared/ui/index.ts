@@ -30,6 +30,7 @@ export * from "./scroll-area";
 export * from "./item";
 export * from "./skeleton";
 export * from "./table";
+export * from "./switch";
 // Custom
 export * from "./ColorInput";
 export * from "./ColorButton";

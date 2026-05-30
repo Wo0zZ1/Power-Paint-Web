@@ -33,6 +33,7 @@ import {
   DeleteSelectionButton,
   BackToContentButton,
   HelpButton,
+  ToolMenu,
 } from "./overlay";
 import { ActiveUsers } from "./overlay/ActiveUsers";
 import { ConnectionStatus } from "./overlay/ConnectionStatus";
@@ -69,7 +70,7 @@ export function KonvaBoard({
   useHocuspocus({ userAwareness, accessToken, boardId });
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
-  const { activeColor } = useInvertableColor(globals.backgroundColor, true);
+  const { activeColor } = useInvertableColor(globals.backgroundColor);
 
   const { handleTouchMove, handlePointerMove, handlePointerLeave } =
     useMouseAwareness();
@@ -127,21 +128,25 @@ export function KonvaBoard({
 
           {/* Bottom Center */}
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col gap-2">
-            <div className="flex justify-center mb-2">
-              <BackToContentButton className="pointer-events-auto" />
+            <div className="flex justify-center items-end">
+              <BackToContentButton className="pointer-events-auto mb-2 mx-auto" />
             </div>
 
-            <div className="md:hidden flex">
-              {canEdit && (
-                <DeleteSelectionButton className="pointer-events-auto" />
-              )}
+            <div className="flex gap-x-2">
+              <ToolMenu className="pointer-events-auto" />
 
-              {canEdit && (
-                <UndoRedoControls
-                  className="pointer-events-auto ml-auto"
-                  tooltipActive={false}
-                />
-              )}
+              <div className="flex items-center gap-x-2 md:hidden ml-auto">
+                {canEdit && (
+                  <>
+                    <DeleteSelectionButton className="ml-auto md:hidden pointer-events-auto" />
+
+                    <UndoRedoControls
+                      className="pointer-events-auto"
+                      tooltipActive={false}
+                    />
+                  </>
+                )}
+              </div>
             </div>
 
             <BottomToolbar
