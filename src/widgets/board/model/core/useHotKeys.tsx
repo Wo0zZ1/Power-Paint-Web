@@ -26,6 +26,9 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
         useBoardStore.getState().setModifiers({ ctrl: true });
       } else if (e.key === "Shift") {
         useBoardStore.getState().setModifiers({ shift: true });
+      } else if (e.key === "Alt") {
+        e.preventDefault();
+        useBoardStore.getState().setModifiers({ alt: true });
       }
 
       if (isInput) return;
@@ -70,12 +73,16 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
         useBoardStore.getState().setModifiers({ ctrl: false });
       if (e.key === "Shift")
         useBoardStore.getState().setModifiers({ shift: false });
+      if (e.key === "Alt") {
+        e.preventDefault();
+        useBoardStore.getState().setModifiers({ alt: false });
+      }
     };
 
     const handleBlur = () => {
       useBoardStore
         .getState()
-        .setModifiers({ space: false, ctrl: false, shift: false });
+        .setModifiers({ space: false, ctrl: false, shift: false, alt: false });
     };
 
     window.addEventListener("keydown", handleKeyDown);

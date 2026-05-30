@@ -68,11 +68,12 @@ interface BoardState {
   setCurrentFillColor: (color: string) => void;
 
   // ── Модификаторы (зажатые клавиши) ──
-  modifiers: { space: boolean; ctrl: boolean; shift: boolean };
+  modifiers: { space: boolean; ctrl: boolean; shift: boolean; alt: boolean };
   setModifiers: (modifiers: {
     space?: boolean;
     ctrl?: boolean;
     shift?: boolean;
+    alt?: boolean;
   }) => void;
 
   // ── Viewport ──
@@ -152,7 +153,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   currentFillColor: "#000000",
   setCurrentFillColor: (color) => set({ currentFillColor: color }),
 
-  modifiers: { space: false, ctrl: false, shift: false },
+  modifiers: { space: false, ctrl: false, shift: false, alt: false },
   setModifiers: (modifiers) =>
     set({ modifiers: { ...get().modifiers, ...modifiers } }),
 
