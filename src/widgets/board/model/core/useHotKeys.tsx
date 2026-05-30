@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { useCopyPast } from "../tools";
+import { resetEraserListening } from "../tools/useEraser";
 
 import { useBoardStore } from "./useBoardStore";
 
@@ -12,6 +13,10 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
   const { copy, paste, duplicate } = useCopyPast();
 
   useEffect(() => {
+    const resetEraserIfActive = () => {
+      if (useBoardStore.getState().tool === "eraser") resetEraserListening();
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const activeElement = document.activeElement;
       const isInput =
@@ -29,6 +34,7 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
       } else if (e.key === "Alt") {
         e.preventDefault();
         useBoardStore.getState().setModifiers({ alt: true });
+        resetEraserIfActive();
       }
 
       if (isInput) return;
@@ -76,6 +82,7 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
       if (e.key === "Alt") {
         e.preventDefault();
         useBoardStore.getState().setModifiers({ alt: false });
+        resetEraserIfActive();
       }
     };
 
@@ -83,6 +90,7 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
       useBoardStore
         .getState()
         .setModifiers({ space: false, ctrl: false, shift: false, alt: false });
+      resetEraserIfActive();
     };
 
     window.addEventListener("keydown", handleKeyDown);
