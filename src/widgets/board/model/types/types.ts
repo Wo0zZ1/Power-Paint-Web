@@ -19,6 +19,7 @@ export type BaseElementType = {
   y: number;
   rotation: number;
   opacity: number;
+  zIndex: number;
 };
 
 export type BaseElementProps = ComponentProps<
@@ -97,6 +98,7 @@ const baseDefaults = (): Omit<BaseElementType, "id"> => ({
   y: 0,
   rotation: 0,
   opacity: 1,
+  zIndex: 0,
 });
 
 export const createCircle = (

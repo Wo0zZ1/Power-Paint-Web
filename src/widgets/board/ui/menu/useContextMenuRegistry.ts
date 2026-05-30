@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { useShallow } from "zustand/react/shallow";
 
 import {
   type ContextMenuType,
@@ -18,7 +19,23 @@ export const useContextMenuRegistry = () => {
   const t = useTranslations("board.context_menu");
 
   const { copy, copyAsImage, exportAsImage, paste, duplicate } = useCopyPast();
-  const removeSelectedElements = useBoardStore((s) => s.removeSelectedElements);
+  const {
+    selectedIds,
+    removeSelectedElements,
+    bringToFront,
+    sendToBack,
+    bringForward,
+    sendBackward,
+  } = useBoardStore(
+    useShallow((s) => ({
+      selectedIds: s.selectedIds,
+      removeSelectedElements: s.removeSelectedElements,
+      bringToFront: s.bringToFront,
+      sendToBack: s.sendToBack,
+      bringForward: s.bringForward,
+      sendBackward: s.sendBackward,
+    })),
+  );
   const closeMenu = useContextMenuStore((s) => s.closeMenu);
 
   const getItems = (type: ContextMenuType): MenuItem[] => {
@@ -92,6 +109,35 @@ export const useContextMenuRegistry = () => {
               closeMenu();
             },
             separator: true,
+          },
+          {
+            label: t("bring_to_front"),
+            action: () => {
+              bringToFront(selectedIds);
+              closeMenu();
+            },
+            separator: true,
+          },
+          {
+            label: t("bring_forward"),
+            action: () => {
+              bringForward(selectedIds);
+              closeMenu();
+            },
+          },
+          {
+            label: t("send_backward"),
+            action: () => {
+              sendBackward(selectedIds);
+              closeMenu();
+            },
+          },
+          {
+            label: t("send_to_back"),
+            action: () => {
+              sendToBack(selectedIds);
+              closeMenu();
+            },
           },
           {
             label: t("delete"),

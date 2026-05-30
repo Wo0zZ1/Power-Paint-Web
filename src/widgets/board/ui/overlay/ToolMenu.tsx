@@ -82,7 +82,7 @@ export function ToolMenu({ className }: ToolMenuProps) {
               <PropertiesRow className="overflow-visible">
                 <NumberField
                   label="w"
-                  min={1}
+                  min={0}
                   max={100}
                   step={1}
                   value={currentStrokeWidth}
