@@ -6,3 +6,4 @@ export * from "./DeleteSelectionButton";
 export * from "./BackToContentButton";
 export * from "./HelpButton";
 export * from "./ToolMenu";
+export * from "./BoardPreferences";

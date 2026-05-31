@@ -237,6 +237,11 @@
     "personal": "Personal Boards",
     "empty": "No available boards",
     "settings": "Board Settings",
+    "preferences": {
+      "title": "Preferences",
+      "show_cursors": "Show cursors",
+      "show_offscreen_cursors": "Show offscreen cursors"
+    },
     "notFound": {
       "title": "Board not found",
       "description": "The board you are looking for does not exist or is inaccessible."

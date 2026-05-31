@@ -34,6 +34,7 @@ import {
   BackToContentButton,
   HelpButton,
   ToolMenu,
+  BoardPreferences,
 } from "./overlay";
 import { ActiveUsers } from "./overlay/ActiveUsers";
 import { ConnectionStatus } from "./overlay/ConnectionStatus";
@@ -157,7 +158,10 @@ export function KonvaBoard({
 
           {/* Bottom Right */}
           <div className="absolute bottom-0 right-0">
-            <HelpButton className="pointer-events-auto" />
+            <div className="flex flex-col justfy-end gap-2">
+              <BoardPreferences className="pointer-events-auto" />
+              <HelpButton className="pointer-events-auto" />
+            </div>
           </div>
         </div>
 
