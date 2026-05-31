@@ -15,6 +15,7 @@ import { generateId } from "../lib/utils";
 
 export type BaseElementType = {
   id: string;
+  groupId?: string;
   x: number;
   y: number;
   rotation: number;

@@ -39,7 +39,7 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
 
       if (isInput) return;
 
-      const { setTool, removeSelectedElements, undo, redo } =
+      const { setTool, removeSelectedElements, undo, redo, groupSelected, ungroupSelected } =
         useBoardStore.getState();
 
       if (e.ctrlKey && e.code === "KeyZ" && canEdit) {
@@ -53,6 +53,12 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
       } else if (e.ctrlKey && e.code === "KeyD" && canEdit) {
         e.preventDefault();
         duplicate();
+      } else if (e.ctrlKey && e.shiftKey && e.code === "KeyG" && canEdit) {
+        e.preventDefault();
+        ungroupSelected();
+      } else if (e.ctrlKey && e.code === "KeyG" && canEdit) {
+        e.preventDefault();
+        groupSelected();
       } else if ((e.code === "Delete" || e.code === "Backspace") && canEdit) {
         removeSelectedElements();
       } else if (e.code === "KeyS") {

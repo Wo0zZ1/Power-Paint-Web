@@ -1,6 +1,13 @@
 "use client";
 
-import { BringToFront, MoveDown, MoveUp, SendToBack } from "lucide-react";
+import {
+  BringToFront,
+  Link2,
+  MoveDown,
+  MoveUp,
+  SendToBack,
+  Unlink2,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useShallow } from "zustand/react/shallow";
 
@@ -15,7 +22,7 @@ import {
 } from "@/shared/ui";
 
 import type { PropertySectionProps } from "../../model";
-import { useBoardStore } from "../../model";
+import { useBoardStore, useGroupingState } from "../../model";
 import { PropertiesRow } from "../properties";
 
 import { SidebarBlock } from "./SidebarBlock";
@@ -23,20 +30,26 @@ import { SidebarBlock } from "./SidebarBlock";
 export function GroupingSection({}: PropertySectionProps) {
   const t = useTranslations("toolbar.sidebar");
 
-  const { selectedIds, bringToFront, bringForward, sendBackward, sendToBack } =
-    useBoardStore(
-      useShallow((s) => ({
-        selectedIds: s.selectedIds,
-        bringToFront: s.bringToFront,
-        bringForward: s.bringForward,
-        sendBackward: s.sendBackward,
-        sendToBack: s.sendToBack,
-      })),
-    );
+  const { selectedIds, canGroup, canUngroup } = useGroupingState();
+  const {
+    bringToFront,
+    bringForward,
+    sendBackward,
+    sendToBack,
+    groupSelected,
+    ungroupSelected,
+  } = useBoardStore(
+    useShallow((s) => ({
+      bringToFront: s.bringToFront,
+      bringForward: s.bringForward,
+      sendBackward: s.sendBackward,
+      sendToBack: s.sendToBack,
+      groupSelected: s.groupSelected,
+      ungroupSelected: s.ungroupSelected,
+    })),
+  );
 
-  const disabled = selectedIds.size === 0;
-
-  if (disabled) return null;
+  if (selectedIds.size === 0) return null;
 
   return (
     <SidebarBlock title={t("grouping")}>
@@ -98,13 +111,39 @@ export function GroupingSection({}: PropertySectionProps) {
         </ButtonGroup>
       </PropertiesRow>
 
-      {/* <PropertiesRow>
-        <Label className="text-xs text-muted-foreground">{t("groups")}</Label>
+      <PropertiesRow>
+        <Tooltip delayDuration={TOOLTIP_DELAY} disableHoverableContent>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={groupSelected}
+              disabled={!canGroup}
+              className="gap-1.5"
+            >
+              <Link2 className="size-3.5" />
+              {t("group")}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{t("group")}</TooltipContent>
+        </Tooltip>
 
-        <div className="rounded-md border border-dashed border-border/60 bg-background/35 px-3 py-2 text-xs text-muted-foreground">
-          {t("groups_empty")}
-        </div>
-      </PropertiesRow> */}
+        <Tooltip delayDuration={TOOLTIP_DELAY} disableHoverableContent>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={ungroupSelected}
+              disabled={!canUngroup}
+              className="gap-1.5"
+            >
+              <Unlink2 className="size-3.5" />
+              {t("ungroup")}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{t("ungroup")}</TooltipContent>
+        </Tooltip>
+      </PropertiesRow>
     </SidebarBlock>
   );
 }

@@ -54,6 +54,11 @@ export const useBoardInteraction = ({ canEdit }: UseBoardInteractionProps) => {
     const stage = e.target.getStage();
     if (!stage) return;
 
+    const pos = stage.getPointerPosition();
+    if (!pos) return;
+    const { x: stageX, y: stageY } = pos;
+    const { x, y } = e.evt;
+
     let clickType: "canvas" | "element" = "element";
     const store = useBoardStore.getState();
 
@@ -99,11 +104,19 @@ export const useBoardInteraction = ({ canEdit }: UseBoardInteractionProps) => {
       }
     }
 
-    const pos = stage.getPointerPosition();
+    // const hasGroup = Array.from(store.selectedIds).some((id) => {
+    //   const element = store.elements.get(id);
+    //   return element?.groupId;
+    // });
+    // const multipleSelection = store.selectedIds.size > 1;
 
-    useContextMenuStore
-      .getState()
-      .openMenu(e.evt.clientX, e.evt.clientY, clickType, pos?.x, pos?.y);
+    useContextMenuStore.getState().openMenu({
+      x,
+      y,
+      stageX,
+      stageY,
+      type: clickType,
+    });
   };
 
   const handlePointerDown = useCallback(

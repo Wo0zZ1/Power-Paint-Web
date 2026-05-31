@@ -8,12 +8,14 @@ import {
   type ElementType,
 } from "../types";
 
+import { splitElementsByGroups } from "./grouping";
 import {
   getEllipseContourPoints,
   getRectCornerPoints,
   getStrokePoints,
   getTextCornerPoints,
 } from "./selection";
+import { generateId } from "./utils";
 
 export const getKonvaNodesFromLayer = (
   layer: Konva.Layer,
@@ -132,16 +134,31 @@ export const elementsToImage = async (
 };
 
 export const duplicateElements = (elements: ElementType[]): ElementType[] => {
+  const groupIdMap = new Map<string, string>();
+
+  splitElementsByGroups(elements).forEach((bucket) => {
+    if (!bucket.groupId) return;
+    groupIdMap.set(bucket.groupId, generateId());
+  });
+
   return elements.map((element) => {
+    const groupId = element.groupId
+      ? groupIdMap.get(element.groupId)
+      : undefined;
+    const overrides = {
+      ...element,
+      groupId,
+    };
+
     switch (element.type) {
       case "circle":
-        return createCircle(element);
+        return createCircle(overrides);
       case "rect":
-        return createRect(element);
+        return createRect(overrides);
       case "draw":
-        return createDraw(element);
+        return createDraw(overrides);
       case "text":
-        return createText(element);
+        return createText(overrides);
       default:
         const _: never = element;
         return _;
