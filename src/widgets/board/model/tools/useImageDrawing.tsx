@@ -6,31 +6,7 @@ import { useUploadThing } from "@/shared/lib/uploadthing";
 
 import { useBoardStore } from "../core";
 import { screenToCanvas } from "../lib";
-import { createImage } from "../types";
-
-const MAX_IMAGE_EDGE = 320;
-
-const getImageDimensions = async (src: string) => {
-  const image = new window.Image();
-
-  image.src = src;
-
-  await image.decode();
-
-  return {
-    width: image.naturalWidth || image.width,
-    height: image.naturalHeight || image.height,
-  };
-};
-
-const fitToMaxEdge = (width: number, height: number, maxEdge: number) => {
-  const scale = Math.min(maxEdge / width, maxEdge / height, 1);
-
-  return {
-    width: Math.max(1, Math.round(width * scale)),
-    height: Math.max(1, Math.round(height * scale)),
-  };
-};
+import { insertImageFromFile } from "../lib";
 
 const createInput = (ref: RefObject<HTMLInputElement | null>) => {
   const input = document.createElement("input");
@@ -54,41 +30,6 @@ export const useImageDrawing = () => {
 
   const { startUpload } = useUploadThing("canvasImageUploader");
 
-  const uploadImage = useCallback(
-    async (elementId: string, file: File, previewUrl: string) => {
-      const { clearImageUploadState, setImageUploadState, updateElement } =
-        useBoardStore.getState();
-
-      try {
-        const uploaded = await startUpload([file]);
-        const uploadedUrl = uploaded?.[0]?.ufsUrl;
-
-        if (!uploadedUrl) {
-          throw new Error("Upload finished without a file URL");
-        }
-
-        updateElement(elementId, { imageUrl: uploadedUrl });
-        clearImageUploadState(elementId);
-        URL.revokeObjectURL(previewUrl);
-      } catch (error) {
-        console.error("Image upload failed", error);
-        setImageUploadState(elementId, {
-          status: "failed",
-          error: error instanceof Error ? error.message : "Upload failed",
-        });
-      }
-    },
-    [startUpload],
-  );
-
-  const setToolAndSelect = useCallback((shapeId: string) => {
-    const { setTool, pureSelect, setSelectionType } = useBoardStore.getState();
-
-    setTool("select");
-    pureSelect(shapeId);
-    setSelectionType("transform");
-  }, []);
-
   const requestImage = useCallback(() => {
     const input = createInput(inputRef);
     input.click();
@@ -101,31 +42,9 @@ export const useImageDrawing = () => {
       input.removeEventListener("cancel", handleAbort);
       removeInput(inputRef);
 
-      const previewUrl = URL.createObjectURL(file);
-      const dimensionsPromise = getImageDimensions(previewUrl);
-
-      void dimensionsPromise.then((dimensions) => {
-        const size = fitToMaxEdge(
-          dimensions.width,
-          dimensions.height,
-          MAX_IMAGE_EDGE,
-        );
-
-        const shape = createImage({
-          x: originRef.current.x,
-          y: originRef.current.y,
-          width: size.width,
-          height: size.height,
-          imageUrl: previewUrl,
-        });
-
-        useBoardStore.getState().addElement(shape);
-        useBoardStore.getState().setImageUploadState(shape.id, {
-          status: "uploading",
-        });
-
-        setToolAndSelect(shape.id);
-        void uploadImage(shape.id, file, previewUrl);
+      void insertImageFromFile(file, {
+        position: originRef.current,
+        startUpload,
       });
     };
 
@@ -137,7 +56,7 @@ export const useImageDrawing = () => {
 
     input.addEventListener("change", handleUpload, { once: true });
     input.addEventListener("cancel", handleAbort, { once: true });
-  }, [setToolAndSelect, uploadImage]);
+  }, [startUpload]);
 
   const beginDraw = useCallback(
     (layerX: number, layerY: number) => {
