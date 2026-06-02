@@ -49,7 +49,7 @@ export function SignupFormStep2() {
       if (res && res[0]) setValue("image", res[0].ufsUrl);
     },
     onUploadError: (error) => {
-      alert(`${t("errors.unknown_error")}: ${error.message}`);
+      alert(error.message);
     },
   });
 

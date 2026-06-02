@@ -1,10 +1,13 @@
 // import { Analytics } from "@vercel/analytics/next";
 // import { SpeedInsights } from "@vercel/speed-insights/next";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";
 import { getLocale, getMessages, getTimeZone } from "next-intl/server";
 import type { ReactNode } from "react";
+import { extractRouterConfig } from "uploadthing/server";
 
 import { auth } from "@/shared/auth";
+import { ourFileRouter } from "@/shared/lib/uploadthing";
 
 import { ThemeScript } from "@/features/switch-theme/ui/ThemeScript";
 
@@ -82,6 +85,7 @@ export default async function RootLayout({
         <ThemeScript />
       </head>
       <body className="flex flex-col h-full">
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
         <QueryProvider isDevtoolsEnabled={isQueryDevtoolsEnabled}>
           <ClientProviders
             locale={locale}

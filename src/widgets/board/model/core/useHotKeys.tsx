@@ -39,8 +39,14 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
 
       if (isInput) return;
 
-      const { setTool, removeSelectedElements, undo, redo, groupSelected, ungroupSelected } =
-        useBoardStore.getState();
+      const {
+        setTool,
+        removeSelectedElements,
+        undo,
+        redo,
+        groupSelected,
+        ungroupSelected,
+      } = useBoardStore.getState();
 
       if (e.ctrlKey && e.code === "KeyZ" && canEdit) {
         e.shiftKey ? redo() : undo();
@@ -75,6 +81,8 @@ export const useHotKeys = ({ canEdit = false }: UseHotKeysProps) => {
         setTool("eraser");
       } else if (e.code === "KeyT" && canEdit) {
         setTool("text");
+      } else if (e.code === "KeyI" && canEdit) {
+        setTool("image");
       }
     };
 

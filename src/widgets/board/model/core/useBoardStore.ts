@@ -2,6 +2,7 @@ import { WebSocketStatus, type HocuspocusProvider } from "@hocuspocus/provider";
 import type { Layer } from "konva/lib/Layer";
 import type { Line } from "konva/lib/shapes/Line";
 import type { Rect } from "konva/lib/shapes/Rect";
+import type { Transformer } from "konva/lib/shapes/Transformer";
 import type { Stage } from "konva/lib/Stage";
 import type * as Y from "yjs";
 import { create } from "zustand";
@@ -20,6 +21,13 @@ import type {
   SelectionType,
   Viewport,
 } from "../types";
+
+type ImageUploadStatus = "uploading" | "failed";
+
+type ImageUploadState = {
+  status: ImageUploadStatus;
+  error?: string;
+};
 
 const getMaxZIndex = (elements: Iterable<{ zIndex: number }>) => {
   let maxZIndex = -1;
@@ -64,6 +72,10 @@ interface BoardState {
   globals: GlobalsState;
   awareness: AwarenessMap;
   clientID: number;
+
+  imageUploads: Record<string, ImageUploadState>;
+  setImageUploadState: (id: string, state: ImageUploadState) => void;
+  clearImageUploadState: (id: string) => void;
 
   // ── Hocuspocus connection status ──
   connectionStatus: WebSocketStatus;
@@ -158,6 +170,22 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   globals: { backgroundColor: "#ffffff" },
   awareness: new Map(),
   clientID: 0,
+
+  imageUploads: {},
+  setImageUploadState: (id, state) =>
+    set((current) => ({
+      imageUploads: {
+        ...current.imageUploads,
+        [id]: state,
+      },
+    })),
+  clearImageUploadState: (id) =>
+    set((current) => {
+      if (!(id in current.imageUploads)) return current;
+
+      const { [id]: _removed, ...rest } = current.imageUploads;
+      return { imageUploads: rest };
+    }),
 
   connectionStatus: WebSocketStatus.Connecting,
   setConnectionStatus: (status) => set({ connectionStatus: status }),
@@ -554,5 +582,6 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       elements: new Map(),
       globals: { backgroundColor: "#ffffff" },
       awareness: new Map(),
+      imageUploads: {},
     }),
 }));

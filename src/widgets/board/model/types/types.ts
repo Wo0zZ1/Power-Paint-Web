@@ -51,6 +51,13 @@ export interface ISizable {
   height: number;
 }
 
+export type ImageElementType = {
+  type: "image";
+  imageUrl: string;
+} & BaseElementType &
+  IStrokable &
+  ISizable;
+
 export type CircleElementType = {
   type: "circle";
 } & BaseElementType &
@@ -90,22 +97,38 @@ export type ElementType =
   | CircleElementType
   | RectElementType
   | DrawElementType
-  | TextElementType;
+  | TextElementType
+  | ImageElementType;
 
 // ─── Фабричные функции ───────────────────────────────────────────────
 
-const baseDefaults = (): Omit<BaseElementType, "id"> => ({
+const baseDefaults: Omit<BaseElementType, "id"> = {
   x: 0,
   y: 0,
   rotation: 0,
   opacity: 1,
   zIndex: 0,
+};
+
+export const createImage = (
+  overrides: Pick<ImageElementType, "imageUrl"> &
+    Partial<Omit<ImageElementType, "type" | "id">>,
+): ImageElementType => ({
+  ...baseDefaults,
+  width: 0,
+  height: 0,
+  strokeColor: "#000000",
+  strokeWidth: 0,
+  strokeType: "solid",
+  ...overrides,
+  type: "image",
+  id: generateId(),
 });
 
 export const createCircle = (
   overrides: Partial<Omit<CircleElementType, "type" | "id">> = {},
 ): CircleElementType => ({
-  ...baseDefaults(),
+  ...baseDefaults,
   width: 0,
   height: 0,
   fillType: "none",
@@ -124,7 +147,7 @@ export const createCircle = (
 export const createRect = (
   overrides: Partial<Omit<RectElementType, "type" | "id">> = {},
 ): RectElementType => ({
-  ...baseDefaults(),
+  ...baseDefaults,
   width: 0,
   height: 0,
   fillType: "none",
@@ -143,7 +166,7 @@ export const createRect = (
 export const createDraw = (
   overrides: Partial<Omit<DrawElementType, "type" | "id">> = {},
 ): DrawElementType => ({
-  ...baseDefaults(),
+  ...baseDefaults,
   points: [],
   strokeColor: "#000000",
   strokeWidth: 5,
@@ -201,7 +224,7 @@ export const createText = (
   }
 
   return {
-    ...baseDefaults(),
+    ...baseDefaults,
     text,
     fontSize,
     fontFamily,
@@ -218,6 +241,9 @@ export const createText = (
 
 // ─── Type guards ─────────────────────────────────────────────────────
 
+export const isImage = (el: ElementType): el is ImageElementType =>
+  el.type === "image";
+
 export const isRect = (el: ElementType): el is RectElementType =>
   el.type === "rect";
 
@@ -231,14 +257,21 @@ export const isText = (el: ElementType): el is TextElementType =>
   el.type === "text";
 
 export const hasSize = <T extends ElementType>(el: T): el is T & ISizable =>
-  isRect(el) || isText(el) || isCircle(el);
+  Object.hasOwn(el, "width") && Object.hasOwn(el, "height");
 
 export const isFillable = <T extends ElementType>(el: T): el is IFillable & T =>
-  isRect(el) || isCircle(el);
+  Object.hasOwn(el, "fillType") &&
+  Object.hasOwn(el, "fillGradientType") &&
+  Object.hasOwn(el, "fillColor1") &&
+  Object.hasOwn(el, "fillColor2") &&
+  Object.hasOwn(el, "fillAngle");
 
 export const isStrokable = <T extends ElementType>(
   el: T,
-): el is IStrokable & T => isRect(el) || isCircle(el) || isDraw(el);
+): el is IStrokable & T =>
+  Object.hasOwn(el, "strokeColor") &&
+  Object.hasOwn(el, "strokeWidth") &&
+  Object.hasOwn(el, "strokeType");
 
 // ─── Viewport ────────────────────────────────────────────────────────
 

@@ -3,6 +3,7 @@ import Konva from "konva";
 import {
   createCircle,
   createDraw,
+  createImage,
   createRect,
   createText,
   type ElementType,
@@ -79,6 +80,8 @@ export const elementsToImage = async (
 
   const offscreenLayer = layer.clone({ listening: false });
 
+  console.log({ offscreenLayer });
+
   const nodesToRemove: Konva.Node[] = [];
   offscreenLayer.children?.forEach((node) => {
     if (!selectedIds.has(node.id())) {
@@ -86,8 +89,12 @@ export const elementsToImage = async (
     }
   });
   nodesToRemove.forEach((node) => node.destroy());
+  console.log({ nodesToRemove });
+  console.log({ offscreenLayer });
 
   const clientRect = offscreenLayer.getClientRect({ skipTransform: false });
+
+  console.log({ clientRect });
 
   if (!clientRect || clientRect.width === 0 || clientRect.height === 0) {
     offscreenLayer.destroy();
@@ -111,6 +118,8 @@ export const elementsToImage = async (
     offscreenLayer.add(bgRect);
     bgRect.moveToBottom();
   }
+
+  console.log({ offscreenLayer });
 
   try {
     const dataURL = offscreenLayer.toDataURL({
@@ -151,6 +160,8 @@ export const duplicateElements = (elements: ElementType[]): ElementType[] => {
     };
 
     switch (element.type) {
+      case "image":
+        return createImage({ ...overrides, imageUrl: element.imageUrl });
       case "circle":
         return createCircle(overrides);
       case "rect":
@@ -182,16 +193,22 @@ export const getElementsBounds = (
 
     let points: { x: number; y: number }[] = [];
 
-    if (el.type === "rect") {
-      points = getRectCornerPoints(el);
-    } else if (el.type === "circle") {
-      points = getEllipseContourPoints(el);
-    } else if (el.type === "text") {
-      points = getTextCornerPoints(el);
-    } else if (el.type === "draw") {
-      points = getStrokePoints(el);
-    } else {
-      const _: never = el;
+    switch (el.type) {
+      case "image":
+      case "rect":
+        points = getRectCornerPoints(el);
+        break;
+      case "circle":
+        points = getEllipseContourPoints(el);
+        break;
+      case "text":
+        points = getTextCornerPoints(el);
+        break;
+      case "draw":
+        points = getStrokePoints(el);
+        break;
+      default:
+        const _: never = el;
     }
 
     if (points.length === 0) {

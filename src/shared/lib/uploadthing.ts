@@ -16,6 +16,15 @@ const f = createUploadthing();
 // };
 
 export const ourFileRouter = {
+  canvasImageUploader: f({
+    image: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  }).onUploadComplete(async ({ file }) => {
+    return { fileUrl: file.ufsUrl };
+  }),
+
   userPictureUploader: f({
     image: {
       maxFileSize: "4MB",

@@ -56,7 +56,6 @@ export function KonvaBoard({
 }: KonvaBoardProps) {
   const stageRef = useRef<Konva.Stage>(null);
   const contentLayerRef = useRef<Konva.Layer>(null);
-  const transformerRef = useRef<Konva.Transformer>(null);
   const selectionRectRef = useRef<Konva.Rect>(null);
   const eraserLineRef = useRef<Konva.Line>(null);
 
@@ -185,7 +184,7 @@ export function KonvaBoard({
 
           <Layer>
             <SelectionElement ref={selectionRectRef} />
-            <TransformerTool canEdit={canEdit} ref={transformerRef} />
+            <TransformerTool canEdit={canEdit} />
             <EraserElement ref={eraserLineRef} />
           </Layer>
 

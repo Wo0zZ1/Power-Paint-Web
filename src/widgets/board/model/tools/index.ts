@@ -3,6 +3,7 @@ export * from "./useCircleDrawing";
 export * from "./useDrag";
 export * from "./useDrawing";
 export * from "./useEraser";
+export * from "./useImageDrawing";
 export * from "./useRectDrawing";
 export * from "./useSelectionRect";
 export * from "./useTextDrawing";

@@ -306,8 +306,9 @@
       "rect": "Rectangle",
       "circle": "Circle",
       "draw": "Draw",
-      "eraser": "Eraser",
-      "text": "Text"
+      "text": "Text",
+      "image": "Image",
+      "eraser": "Eraser"
     },
     "zoom": {
       "in": "Zoom In",
