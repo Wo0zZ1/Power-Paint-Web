@@ -225,7 +225,7 @@ export const useCopyPast = () => {
     );
 
     duplicate(selectedElements, { useOffsetOnly: true });
-  }, []);
+  }, [duplicate]);
 
   return {
     copy: handleCopy,
