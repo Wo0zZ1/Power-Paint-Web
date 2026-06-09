@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { type ComponentProps } from "react";
+import { useState, type ComponentProps } from "react";
 import type { Ellipse } from "react-konva";
 import { Image, Rect, Text } from "react-konva";
 import { useImage } from "react-konva-utils";
@@ -21,7 +21,10 @@ export function ImageElement({ element, ...props }: ImageElementProps) {
   const uploadState = useBoardStore((s) => s.imageUploads[element.id]);
   const isSelected = selectedIds.has(element.id);
 
+  const [prevImage, setPrevImage] = useState<HTMLImageElement | undefined>();
   const [image, status] = useImage(element.imageUrl, "anonymous"); // TODO: handle auth properly
+
+  if (image && prevImage !== image) setPrevImage(image);
 
   const dash = getDash(element.strokeType);
 
@@ -33,7 +36,8 @@ export function ImageElement({ element, ...props }: ImageElementProps) {
   const isUploadFailed = uploadState?.status === "failed";
   const isFailed = isUploadFailed || status === "failed";
   const isLoaded = status === "loaded";
-  const showPlaceholder = isUploading || isUploadFailed || !isLoaded;
+  const showPlaceholder =
+    !prevImage && (isUploading || isUploadFailed || !isLoaded);
   const placeholderSize = Math.min(element.width, element.height);
 
   const accentColor = isFailed ? "#ef4444" : "#a1a1aa";
@@ -71,7 +75,7 @@ export function ImageElement({ element, ...props }: ImageElementProps) {
         </>
       )}
       <Image
-        image={image}
+        image={image || prevImage}
         id={element.id}
         x={element.x}
         y={element.y}

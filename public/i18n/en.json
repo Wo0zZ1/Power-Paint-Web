@@ -436,6 +436,18 @@
       "cloud_storage_title": "Cloud storage",
       "cloud_storage_description": "Store your work in the cloud and access it from anywhere."
     },
+    "feature_cards": {
+      "return_to_focus": "Return to Focus",
+      "return_to_focus_desc": "Jump back to the right spot on the canvas when you get lost in zoom or movement.",
+      "smart_eraser": "Smart Eraser",
+      "smart_eraser_desc": "Remove brush strokes in a single motion, or hold Alt to quickly clear selection without breaking your flow.",
+      "role_based_access": "Role-based Access",
+      "role_based_access_desc": "Control who can view, edit, or manage the board without adding complexity.",
+      "collaborative_editing": "Collaborative Editing",
+      "collaborative_editing_desc": "Let multiple people work at once without stepping on each other’s ideas.",
+      "more_than_board": "More than a board for any task",
+      "more_than_board_desc": "Use advanced capabilities—from real-time collaboration and flexible editing to access control and other tools designed for any workflow."
+    },
     "Comparison": {
       "why_title": "Why Power Paint?",
       "why_desc": "Compare us with other popular solutions on the market.",
